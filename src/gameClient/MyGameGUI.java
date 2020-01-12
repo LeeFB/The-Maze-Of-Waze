@@ -27,23 +27,19 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * this is the screen parameters
      */
-    public final int width = 1000;
-    public final int height = 750;
+    private final int width = 1000;
+    private final int height = 750;
+
+    /**
+     * range of node in game
+     */
     private Range rangeX;
     private Range rangeY;
-    private double scaleX;
-    private double scaleY;
 
     /**
      * the middle point of the screen
      **/
     private Point3D midPixel = new Point3D((float) width / 2, (float) height / 2);
-    /**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~**/
-
-    /**
-     * the level of the game
-     */
-    private int level;
 
     /**
      * the graph in the game
@@ -51,7 +47,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private OOP_DGraph graph;
 
     /**
-     * INIT GUI with graph
+     * INIT game
      **/
     public MyGameGUI() {
         initGUI();
@@ -61,19 +57,23 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * INIT the screen with all menu's and parameters
      */
     private void initGUI() {
+        //set the window parameters
         this.setSize(width, height);
         this.setTitle("My Game");
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        level = askForLevel();
+        //ask for the level of the game
 
+        int level = askForLevel();
         game_service game = Game_Server.getServer(level); // you have [0,23] games
+
+        //init the game graph
         String graphStr = game.getGraph();
         this.graph = new OOP_DGraph();
         this.graph.init(graphStr);
 
-        //set the print range of the graph
+        //set the points range of the graph
         setRangeX();
         setRangeY();
 
@@ -97,14 +97,21 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 "7","8","9","10","11","12",
                 "13","14","15","16","17","18",
                 "19","20","21","22","23"};
-        String s = (String)JOptionPane.showInputDialog(
-                frame,
-                "Choose level to play:\n",
-                "Level",
-                JOptionPane.PLAIN_MESSAGE,
-                icon,
-                possibilities,
-                "0");
+        String s;
+        do {
+            s = (String)JOptionPane.showInputDialog(
+                    frame,
+                    "Choose level to play:\n",
+                    "Level",
+                    JOptionPane.PLAIN_MESSAGE,
+                    icon,
+                    possibilities,
+                    "0");
+            if (s == null)
+                JOptionPane.showMessageDialog(this, "Please Enter a Level Number",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+        }while (s == null);
+
         return Integer.parseInt(s);
 
     }
@@ -170,12 +177,30 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
-    private double rescaleX(double x) {
-        return rescale(x,rangeX.get_min(),rangeX.get_max(),50,width - 100);
+    /**
+     *
+     * @param data denote some data to be scaled
+     * @param r_min the minimum of the range of your data
+     * @param r_max the maximum of the range of your data
+     * @param t_min the minimum of the range of your desired target scaling
+     * @param t_max the maximum of the range of your desired target scaling
+     * @return relative resolution based of given parameters
+     */
+    private double rescale(double data, double r_min, double r_max, double t_min, double t_max) {
+        return ((data - r_min) / (r_max-r_min)) * (t_max - t_min) + t_min;
     }
 
+    /**
+     *
+     * @param x,y - location of data
+     * @return resolution of x/y with screen setting
+     * using rescale method
+     */
+    private double rescaleX(double x) {
+        return rescale(x,rangeX.get_min(),rangeX.get_max(),width*0.1,width - width*0.1);
+    }
     private double rescaleY(double y) {
-        return rescale(y,rangeY.get_min(),rangeY.get_max(),50,height -  75);
+        return rescale(y,rangeY.get_min(),rangeY.get_max(),height*0.1,height - height*0.1);
 
     }
 
@@ -241,24 +266,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     /**
-     *
-     * @param data denote some data to be scaled
-     * @param r_min the minimum of the range of your data
-     * @param r_max the maximum of the range of your data
-     * @param t_min the minimum of the range of your desired target scaling
-     * @param t_max the maximum of the range of your desired target scaling
-     * @return
-     */
-    private double rescale(double data, double r_min, double r_max,
-                         double t_min, double t_max)
-    {
-
-        double res = ((data - r_min) / (r_max-r_min)) * (t_max - t_min) + t_min;
-        return res;
-    }
-
-    /**
      * set the RangeX of the graph Range[minX,maxX]
+     * go over all nodes and find min,max X
      */
     private void setRangeX(){
         double max = Double.MIN_VALUE;
@@ -275,6 +284,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
     /**
      * set the RangeY of the graph Range[minY,maxY]
+     * go over all nodes and find min,max Y
      */
     private void setRangeY(){
         double max = Double.MIN_VALUE;
