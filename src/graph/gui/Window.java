@@ -407,7 +407,6 @@ public class Window extends JFrame implements ActionListener, Runnable {
         }
         return (midPixel.x() + (scaleX * x));
     }
-
     private double scaleYCenter(double y) {
         if (!rangeX.isIn(y)) {
             System.out.println("ERR: Node is out of Y scale");
@@ -438,6 +437,7 @@ public class Window extends JFrame implements ActionListener, Runnable {
 
 
     }
+
 
     @Override
     public void run() {
