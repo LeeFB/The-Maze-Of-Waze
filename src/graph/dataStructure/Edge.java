@@ -1,4 +1,4 @@
-package dataStructure;
+package graph.dataStructure;
 
 import java.io.Serializable;
 
@@ -8,14 +8,14 @@ public class Edge implements edge_data, Serializable {
     private double weight;
     private int tag;
 
-    public Edge(int src, int dest, double weight){
+    public Edge(int src, int dest, double weight) {
         this.src = src;
         this.dest = dest;
         this.weight = weight;
         this.tag = -1;
     }
 
-    public Edge(Edge edge){
+    public Edge(Edge edge) {
         this.src = edge.src;
         this.dest = edge.dest;
         this.weight = edge.weight;
@@ -24,7 +24,6 @@ public class Edge implements edge_data, Serializable {
 
 
     /**
-     *
      * @return src ID
      */
     public int getSrc() {
@@ -32,7 +31,6 @@ public class Edge implements edge_data, Serializable {
     }
 
     /**
-     *
      * @int getDest()
      */
     public int getDest() {
@@ -40,7 +38,6 @@ public class Edge implements edge_data, Serializable {
     }
 
     /**
-     *
      * @return weight of the edge
      */
     public double getWeight() {
@@ -48,16 +45,14 @@ public class Edge implements edge_data, Serializable {
     }
 
     /**
-     *
      * @return the remark (meta data) associated with this edge
      */
     public String getInfo() {
-        return "Src: " + src +", Dest: " + dest +
+        return "Src: " + src + ", Dest: " + dest +
                 ", Weight: " + weight + ", Tag: " + tag;
     }
 
     /**
-     *
      * @return string of the edge
      */
     public String toString() {
@@ -66,6 +61,7 @@ public class Edge implements edge_data, Serializable {
 
     /**
      * Allows changing the remark (meta data) associated with this edge.
+     *
      * @param s - String of an Edge
      */
     public void setInfo(String s) {
@@ -77,14 +73,15 @@ public class Edge implements edge_data, Serializable {
     }
 
     /**
-     *
      * @return tag of edge
      */
     public int getTag() {
         return tag;
     }
 
-    /**``
+    /**
+     * ``
+     *
      * @v
      */
     public void setTag(int t) {
