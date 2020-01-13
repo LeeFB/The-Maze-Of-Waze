@@ -34,6 +34,7 @@ public class Node implements node_data, Serializable {
         this(other.getKey(), other.getLocation(), other.getWeight(), other.getTag());
     }
 
+
     /**
      * @return the key of node
      */

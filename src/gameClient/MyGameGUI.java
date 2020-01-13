@@ -2,12 +2,12 @@ package gameClient;
 
 import Server.Game_Server;
 import Server.game_service;
-import graph.utils.Point3D;
+import graph.dataStructure.DGraph;
+import graph.dataStructure.edge_data;
+import graph.dataStructure.node_data;
 import graph.utils.Range;
-import oop_dataStructure.OOP_DGraph;
 import oop_dataStructure.oop_edge_data;
 import oop_dataStructure.oop_graph;
-import oop_dataStructure.oop_node_data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -29,22 +30,17 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      */
     private final int width = 1000;
     private final int height = 750;
-
     /**
      * range of node in game
      */
     private Range rangeX;
     private Range rangeY;
-
-    /**
-     * the middle point of the screen
-     **/
-    private Point3D midPixel = new Point3D((float) width / 2, (float) height / 2);
-
     /**
      * the graph in the game
      **/
-    private OOP_DGraph graph;
+    private DGraph graph;
+
+    private BufferedImage gameLayout;
 
     /**
      * INIT game
@@ -70,12 +66,14 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         //init the game graph
         String graphStr = game.getGraph();
-        this.graph = new OOP_DGraph();
+        this.graph = new DGraph();
         this.graph.init(graphStr);
 
         //set the points range of the graph
         setRangeX();
         setRangeY();
+
+
 
 
 
@@ -91,7 +89,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         frame.setSize(400, 400);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         ImageIcon icon = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/game/Utils/icon/icon.png");
+        Image image = icon.getImage(); // transform it
+        Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
+        icon = new ImageIcon(newimg);  // transform it back
+
         Object[] possibilities = {
                 "0","1","2","3","4","5","6",
                 "7","8","9","10","11","12",
@@ -116,6 +119,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+
     /**
      * paint a representation of a graph
      *
@@ -124,13 +128,15 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void paint(Graphics g) {
         if (graph.nodeSize() == 0)
             return;
+
+        gameLayout = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         super.paint(g);
 
-        OOP_DGraph graph = this.graph;
+        DGraph graph = this.graph;
 
-        Graphics2D graphics = (Graphics2D) g;
+        Graphics2D graphics = gameLayout.createGraphics();
 
-        for (oop_node_data p : graph.getV()) {
+        for (node_data p : graph.getV()) {
             double xPixel = rescaleX(p.getLocation().x());
             double yPixel = rescaleY(p.getLocation().y());
 
@@ -142,12 +148,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             graphics.drawString(String.valueOf(p.getKey()), (int) xPixel - 2, (int) yPixel - 8);
         }
 
-        for (oop_node_data p : graph.getV()) {
+        for (node_data p : graph.getV()) {
             if (graph.getE(p.getKey()) != null) {
-                for (oop_edge_data edge : graph.getE(p.getKey())) {
+                for (edge_data edge : graph.getE(p.getKey())) {
 
-                    oop_node_data src = graph.getNode(edge.getSrc());
-                    oop_node_data dest = graph.getNode(edge.getDest());
+                    node_data src = graph.getNode(edge.getSrc());
+                    node_data dest = graph.getNode(edge.getDest());
 
                     double srcXPixel = rescaleX(src.getLocation().x());
                     double srcYPixel = rescaleY(src.getLocation().y());
@@ -175,6 +181,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 }
             }
         }
+        Graphics2D layoutCan = (Graphics2D)g;
+        layoutCan.drawImage(gameLayout,null,0,0);
     }
 
     /**
@@ -272,7 +280,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private void setRangeX(){
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
-        for(oop_node_data node : graph.getV()) {
+        for(node_data node : graph.getV()) {
             if (node.getLocation().x() > max)
                 max = node.getLocation().x();
             if (node.getLocation().x() < min)
@@ -280,7 +288,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
 
         rangeX = new Range(min,max);
-        System.out.println(rangeX);
     }
     /**
      * set the RangeY of the graph Range[minY,maxY]
@@ -289,15 +296,14 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private void setRangeY(){
         double max = Double.MIN_VALUE;
         double min = Double.MAX_VALUE;
-        for(oop_node_data node : graph.getV()) {
+        for(node_data node : graph.getV()) {
             if (node.getLocation().y() > max)
                 max = node.getLocation().y();
             if (node.getLocation().y() < min)
                 min = node.getLocation().y();
         }
-        rangeY = new Range(min,max);
-        System.out.println(rangeY);
 
+        rangeY = new Range(min,max);
     }
 
     @Override

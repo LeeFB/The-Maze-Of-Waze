@@ -1,0 +1,11 @@
+*ToDo*
+
+class to implements:
+Fruits
+Robots
+automationOfRobots
+
+GUI for game:
+Game with mouse
+DoubleBuffering, draw graph only once.
+Game automation

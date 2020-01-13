@@ -8,5 +8,6 @@ public class game {
     private static void test2() {
         MyGameGUI game = new MyGameGUI();
         game.setVisible(true);
+
     }
 }
