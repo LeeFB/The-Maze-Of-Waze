@@ -1,7 +1,7 @@
 *ToDo*
 
 class to implements:
-Fruits - Raphael -Done
+Fruits - Raphael - Done
 Robots - Lee - Working on it
 automationOfRobots - Raphael - Working on it
 

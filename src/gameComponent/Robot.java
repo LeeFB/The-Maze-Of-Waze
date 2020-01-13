@@ -1,18 +1,35 @@
 package gameComponent;
 
-import org.json.JSONObject;
-
 import graph.utils.Point3D;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Robot implements robotINT 
 {
+
 	private int src;
+	private int dest;
 	private Point3D pos;
 	private int id;
-	private int dest;
 	private int value;
 	private double speed;
-	private double money;
+	private double money; //I think Server is in charge of it
+
+	public Robot(String info){
+		try {
+			JSONObject robot = new JSONObject(info);
+			src = robot.getInt("src");
+			dest = robot.getInt("dest");
+			money = robot.getDouble("money");
+
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	public String toJSON() {
+		String ans = "{\"Robot\":{\"id\":" + this.id + "," + "\"value\":" + this.money + "," + "\"src\":" + src + "," + "\"dest\":" + dest + "," + "\"speed\":" + this.getSpeed() + "," + "\"pos\":\"" + this.pos.toString() + "\"" + "}" + "}";
+		return ans;
+	}
 
 	public Robot()
 	{

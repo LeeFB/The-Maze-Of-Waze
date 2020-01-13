@@ -6,6 +6,8 @@ import graph.utils.Point3D;
 import oop_dataStructure.oop_edge_data;
 import oop_elements.OOP_Edge;
 import oop_utils.OOP_Point3D;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 
@@ -37,18 +39,28 @@ public class Fruit implements fruitsINT {
         }
     }
 
-//    public Fruit(String info){
-//        try {
-//            JSONObject fruit = new JSONObject(info);
-//            Point3D location = new Point3D((String) fruit.get("pos"));
-//            double value = fruit.getDouble("value");
-//            findEdge();
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
+    public Fruit(String info){
+        try {
+            JSONObject fruit = new JSONObject(info);
+            location = new Point3D((String) fruit.get("pos"));
+            value = fruit.getDouble("value");
+            type = fruit.getInt("type");
+            edge = null;
+            //findEdge();
+            if (edge.getSrc() - edge.getDest() > 0) {
+                type = 1;
+                img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/banana-64.png"); //Banana
+            }
+            else{
+                type = -1;
+                img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/icons8-apple-64.png"); //Apple
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     /**

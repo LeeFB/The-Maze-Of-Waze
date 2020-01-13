@@ -3,13 +3,13 @@ package gameClient;
 
 import Server.Game_Server;
 import Server.game_service;
+import gameComponent.Fruit;
+import gameComponent.Robot;
 import graph.dataStructure.DGraph;
 import graph.dataStructure.edge_data;
 import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 import graph.utils.Range;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
@@ -50,8 +47,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * LinkList for the robots and fruits in the game
      */
-    private LinkedList fruits;
-    private LinkedList robots;
+    private LinkedList<Fruit> fruits;
+    private LinkedList<Robot> robots;
 
     /**
      * INIT game
@@ -83,7 +80,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         setRangeX();
         setRangeY();
         //get the list of fruits
-        getRobotsAndFruits();
+        getFruits();
+        getRobots();
 
         statGame();
 
@@ -93,10 +91,18 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    private void getRobotsAndFruits() {
-//            Iterator<String> fruitItr = game.getFruits().iterator();
-//            while (fruitItr.hasNext())
-//                fruits.add(new Fruit(fruitItr));
+    private void getFruits() {
+        for (String s : game.getFruits()) {
+            System.out.println(s);
+            fruits.add(new Fruit(s));
+        }
+    }
+
+    private void getRobots(){
+        for (String s : game.getRobots()) {
+            System.out.println(s);
+            robots.add(new Robot(s));
+        }
 
     }
 
@@ -113,8 +119,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return null;
     }
 
-    private void getFruits() {
-    }
 
     private void statGame() {
 
@@ -268,60 +272,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    /**
-     * Moves each of the robots along the edge,
-     * in case the robot is on a node the next destination (next edge) is chosen (randomly).
-     *
-     * @param game
-     * @param gg
-     */
-    private static void moveRobots(game_service game, DGraph gg) {
-        List<String> log = game.move();
-        if (log != null) {
-            long t = game.timeToEnd();
-            for (int i = 0; i < log.size(); i++) {
-                String robot_json = log.get(i);
-                try {
-                    JSONObject line = new JSONObject(robot_json);
-                    JSONObject ttt = line.getJSONObject("Robot");
-                    int rid = ttt.getInt("id");
-                    int src = ttt.getInt("src");
-                    int dest = ttt.getInt("dest");
-
-                    if (dest == -1) {
-                        dest = nextNode(gg, src);
-                        game.chooseNextEdge(rid, dest);
-                        System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
-                        System.out.println(ttt);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * a very simple random walk implementation!
-     *
-     * @param g
-     * @param src
-     * @return
-     */
-    private static int nextNode(DGraph g, int src) {
-        int ans = -1;
-        Collection<edge_data> ee = g.getE(src);
-        Iterator<edge_data> itr = ee.iterator();
-        int s = ee.size();
-        int r = (int) (Math.random() * s);
-        int i = 0;
-        while (i < r) {
-            itr.next();
-            i++;
-        }
-        ans = itr.next().getDest();
-        return ans;
-    }
 
     /**
      * set the RangeX of the graph Range[minX,maxX]
@@ -385,4 +335,5 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void mouseExited(MouseEvent e) {
 
     }
+
 }
