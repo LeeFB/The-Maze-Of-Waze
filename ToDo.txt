@@ -1,9 +1,9 @@
 *ToDo*
 
 class to implements:
-Fruits
-Robots
-automationOfRobots
+Fruits - Raphael -Done
+Robots - Lee - Working on it
+automationOfRobots - Raphael - Working on it
 
 GUI for game:
 Game with mouse

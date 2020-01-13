@@ -11,8 +11,8 @@ public class Fruits implements fruitsINT {
     private Point3D location;           //The location of the fruit
     private double value;               //The value in game of the fruit
     private edge_data edge;             //The edge the fruit is on
-    private int type;
-    private ImageIcon img;
+    private int type;                   //The type of the fruit [-1,Banana][1,Apple]
+    private ImageIcon img;              //The icon of the fruit
 
     /**
      * constructor of Fruit
@@ -60,6 +60,10 @@ public class Fruits implements fruitsINT {
         return type;
     }
 
+    /**
+     *
+     * @return the fruit icon
+     */
     public ImageIcon getImg(){
         return img;
     }
@@ -78,7 +82,7 @@ public class Fruits implements fruitsINT {
      * @param r - Robot
      * @param dist - desire length between fruit and robot
      *               in order to grab the fruit
-     * @return - the value of the fruit
+     * @return - the value of the fruit else 0;
      */
     @Override
     public double grap(Robot r, double dist) {
