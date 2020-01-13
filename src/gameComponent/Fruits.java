@@ -1,6 +1,6 @@
 package gameComponent;
 
-import Server.robot;
+
 import graph.dataStructure.edge_data;
 import graph.utils.Point3D;
 
@@ -72,8 +72,19 @@ public class Fruits implements fruitsINT {
         String ans = "{\"Fruit\":{\"value\":" + this.value + "," + "\"type\":" + type + "," + "\"pos\":\"" + this.location.toString() + "\"" + "}" + "}";
         return ans;
     }
+
+    /**
+     *
+     * @param r - Robot
+     * @param dist - desire length between fruit and robot
+     *               in order to grab the fruit
+     * @return - the value of the fruit
+     */
     @Override
-    public double grap(robot var1, double var2) {
+    public double grap(Robot r, double dist) {
+        if (r != null && r.getNextNode() == edge.getDest())
+            if(dist > r.getLocation().distance3D(location))
+                return value;
         return 0;
     }
 }
