@@ -1,10 +1,5 @@
 package graph.dataStructure;
 
-import graph.utils.Point3D;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -179,97 +174,24 @@ public class DGraph implements graph, Serializable {
      * @return String representing the graph
      */
     public String toString() {
-        StringBuilder s = new StringBuilder("");
-        s.append("Nodes: {\n");
+        String s = new String();
+        s += "Nodes: {\n";
         for (Integer key : nodes.keySet()) {
-            s.append("[\n");
-            s.append(nodes.get(key).toString()).append("\n");
-            s.append("]\n");
+            s += "[\n";
+            s += nodes.get(key).toString() + "\n";
+            s += "]\n";
         }
-        s.append("}\n");
+        s += "}\n";
 
-        s.append("Edges: {\n");
+        s += "Edges: {\n";
         for (Integer key : edge.keySet()) {
             for (Integer keyinternalkey : edge.get(key).keySet()) {
-                s.append("[\n");
-                s.append(edge.get(key).get(keyinternalkey).toString()).append("\n");
-                s.append("]\n");
+                s += "[\n";
+                s += edge.get(key).get(keyinternalkey).toString() + "\n";
+                s += "]\n";
             }
         }
-        s.append("}\n");
-        return s.toString();
-    }
-
-    public void init(String jsonSTR) {
-        try {
-            this.init();
-            JSONObject graph = new JSONObject(jsonSTR);
-            JSONArray nodes = graph.getJSONArray("Nodes");
-            JSONArray edges = graph.getJSONArray("Edges");
-
-            int i;
-            int s;
-            for(i = 0; i < nodes.length(); ++i) {
-                s = nodes.getJSONObject(i).getInt("id");
-                String pos = nodes.getJSONObject(i).getString("pos");
-                Point3D p = new Point3D(pos);
-                this.addNode(new Node(s, p));
-            }
-
-            for(i = 0; i < edges.length(); ++i) {
-                s = edges.getJSONObject(i).getInt("src");
-                int d = edges.getJSONObject(i).getInt("dest");
-                double w = edges.getJSONObject(i).getDouble("w");
-                this.connect(s, d, w);
-            }
-        } catch (Exception var10) {
-            var10.printStackTrace();
-        }
-    }
-
-    public String toJSON() {
-        JSONObject allEmps = new JSONObject();
-        JSONArray VArray = new JSONArray();
-        JSONArray EArray = new JSONArray();
-        Collection<node_data> V = this.getV();
-        Iterator<node_data> iter = V.iterator();
-        Collection<edge_data> E = null;
-        Iterator itr = null;
-
-        try {
-            while(iter.hasNext()) {
-                node_data nn = iter.next();
-                int n = nn.getKey();
-                String p = nn.getLocation().toString();
-                JSONObject node = new JSONObject();
-                node.put("id", n);
-                node.put("pos", p);
-                VArray.put(node);
-                itr = this.getE(n).iterator();
-
-                while(itr.hasNext()) {
-                    edge_data ee = (edge_data)itr.next();
-                    JSONObject edge = new JSONObject();
-                    edge.put("src", ee.getSrc());
-                    edge.put("dest", ee.getDest());
-                    edge.put("w", ee.getWeight());
-                    EArray.put(edge);
-                }
-            }
-
-            allEmps.put("Nodes", VArray);
-            allEmps.put("Edges", EArray);
-        } catch (Exception var14) {
-            var14.printStackTrace();
-        }
-
-        return allEmps.toString();
-    }
-
-    public void init() {
-        nodes = new HashMap<>();
-        edge = new HashMap<>();
-        edgeSize = 0;
-        MC = 0;
+        s += "}\n";
+        return s;
     }
 }
