@@ -3,10 +3,13 @@ package gameComponent;
 
 import graph.dataStructure.edge_data;
 import graph.utils.Point3D;
+import oop_dataStructure.oop_edge_data;
+import oop_elements.OOP_Edge;
+import oop_utils.OOP_Point3D;
 
 import javax.swing.*;
 
-public class Fruits implements fruitsINT {
+public class Fruit implements fruitsINT {
 
     private Point3D location;           //The location of the fruit
     private double value;               //The value in game of the fruit
@@ -20,7 +23,7 @@ public class Fruits implements fruitsINT {
      * @param value    - The value in game of the fruit
      * @param edge     - The edge the fruit is on
      */
-    public Fruits(Point3D location, double value, edge_data edge){
+    public Fruit(Point3D location, double value, edge_data edge){
         this.location = new Point3D(location);
         this.value = value;
         this.edge = edge;
@@ -33,6 +36,20 @@ public class Fruits implements fruitsINT {
             img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/icons8-apple-64.png"); //Apple
         }
     }
+
+//    public Fruit(String info){
+//        try {
+//            JSONObject fruit = new JSONObject(info);
+//            Point3D location = new Point3D((String) fruit.get("pos"));
+//            double value = fruit.getDouble("value");
+//            findEdge();
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
+
 
     /**
      * @return - The location of the fruit
@@ -90,5 +107,15 @@ public class Fruits implements fruitsINT {
             if(dist > r.getLocation().distance3D(location))
                 return value;
         return 0;
+    }
+
+    public static void main(String[] a) {
+        double v = 10.0D;
+        oop_edge_data e = new OOP_Edge(5, 3, 2.0);
+        OOP_Point3D p = new OOP_Point3D(1.0, 2.0, 3.0
+        );
+        Server.Fruit f = new Server.Fruit(v, p, e);
+        String s = f.toJSON();
+        System.out.println(s);
     }
 }

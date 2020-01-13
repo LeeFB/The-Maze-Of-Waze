@@ -1,13 +1,13 @@
 package gameClient;
 
+
 import Server.Game_Server;
 import Server.game_service;
 import graph.dataStructure.DGraph;
 import graph.dataStructure.edge_data;
 import graph.dataStructure.node_data;
+import graph.utils.Point3D;
 import graph.utils.Range;
-import oop_dataStructure.oop_edge_data;
-import oop_dataStructure.oop_graph;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +21,7 @@ import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -40,7 +41,17 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      **/
     private DGraph graph;
 
-    private BufferedImage gameLayout;
+    private final Double EPS = 0.001;
+
+    private game_service game;
+    private int level;                  //The level we are playing
+    private BufferedImage gameLayout;   //Buffer for the graph
+
+    /**
+     * LinkList for the robots and fruits in the game
+     */
+    private LinkedList fruits;
+    private LinkedList robots;
 
     /**
      * INIT game
@@ -61,21 +72,51 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         //ask for the level of the game
 
-        int level = askForLevel();
-        game_service game = Game_Server.getServer(level); // you have [0,23] games
+        level = askForLevel();
+        game = Game_Server.getServer(level); // you have [0,23] games
 
         //init the game graph
         String graphStr = game.getGraph();
         this.graph = new DGraph();
         this.graph.init(graphStr);
-
         //set the points range of the graph
         setRangeX();
         setRangeY();
+        //get the list of fruits
+        getRobotsAndFruits();
+
+        statGame();
 
 
 
 
+
+    }
+
+    private void getRobotsAndFruits() {
+//            Iterator<String> fruitItr = game.getFruits().iterator();
+//            while (fruitItr.hasNext())
+//                fruits.add(new Fruit(fruitItr));
+
+    }
+
+    private edge_data findEdge(Point3D p){
+        for (node_data node : graph.getV())
+            for (edge_data edge : graph.getE(node.getKey())) {
+                node_data src = graph.getNode(edge.getSrc());
+                node_data dst = graph.getNode(edge.getDest());
+                double dist = p.distance3D(src.getLocation()) + p.distance3D(dst.getLocation());
+                if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
+                    return edge;
+            }
+        System.out.println("No corresponding edge");
+        return null;
+    }
+
+    private void getFruits() {
+    }
+
+    private void statGame() {
 
 
     }
@@ -90,7 +131,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        ImageIcon icon = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/game/Utils/icon/icon.png");
+        ImageIcon icon = new ImageIcon("src/Utils/icon/icon.png");
         Image image = icon.getImage(); // transform it
         Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
         icon = new ImageIcon(newimg);  // transform it back
@@ -111,7 +152,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     possibilities,
                     "0");
             if (s == null)
-                JOptionPane.showMessageDialog(this, "Please Enter a Level Number",
+                JOptionPane.showMessageDialog(this, "Please Choose a Level Number",
                         "ERROR", JOptionPane.ERROR_MESSAGE);
         }while (s == null);
 
@@ -119,13 +160,22 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    public void paint(Graphics g){
+        if (gameLayout == null)
+            paintComponent(g);
+        Graphics2D layoutCan = (Graphics2D)g;
+        layoutCan.drawImage(gameLayout,null,0,0);
+
+
+
+    }
 
     /**
      * paint a representation of a graph
      *
      * @param g - DGraph
      */
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         if (graph.nodeSize() == 0)
             return;
 
@@ -225,7 +275,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * @param game
      * @param gg
      */
-    private static void moveRobots(game_service game, oop_graph gg) {
+    private static void moveRobots(game_service game, DGraph gg) {
         List<String> log = game.move();
         if (log != null) {
             long t = game.timeToEnd();
@@ -258,10 +308,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * @param src
      * @return
      */
-    private static int nextNode(oop_graph g, int src) {
+    private static int nextNode(DGraph g, int src) {
         int ans = -1;
-        Collection<oop_edge_data> ee = g.getE(src);
-        Iterator<oop_edge_data> itr = ee.iterator();
+        Collection<edge_data> ee = g.getE(src);
+        Iterator<edge_data> itr = ee.iterator();
         int s = ee.size();
         int r = (int) (Math.random() * s);
         int i = 0;
