@@ -4,10 +4,141 @@ import graph.utils.Point3D;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Robot implements robotINT 
-{
+import graph.dataStructure.*;
+
+public class Robot {
 
 	private int src;
+	private int dest;
+	private Point3D pos;
+	private int id;
+	private double value;
+	private double speed;
+
+
+	public Robot()
+	{
+		this.src = 0;
+		this.pos = null;
+		this.id = -1;
+		this.dest = 0;
+		this.value = 0;
+		this.speed = 0;
+	}
+
+	public Robot(int src, Point3D pos, int id, int dest, double value, double speed)
+	{
+		this.src = src;
+		this.pos = new Point3D(pos);
+		this.id = id;
+		this.dest = dest;
+		this.value = value;
+		this.speed = speed;
+	}
+
+	public int getID() 
+	{
+		return id;
+	}
+
+	public Point3D getLocation() 
+	{
+		Point3D location = new Point3D(pos);
+		return location;
+	}
+
+	public void setLocation (Point3D loc)
+	{
+		this.pos = loc;
+	}
+
+	public double getValue() 
+	{
+		return value;
+	}
+	public void setValue(double value) 
+	{
+		this.value = value;
+	}
+
+	public double getSpeed()
+	{
+		return speed;
+	}
+
+	public void setSpeed(double var1)
+	{
+		this.speed = var1;
+	}
+
+	public int getSrcNode() 
+	{
+		return src;
+	}
+
+	public void setSrcNode(int src) 
+	{
+		this.src = src;
+	}
+
+	public int getDestNode() 
+	{
+		return dest;
+	}
+
+	public void setDestNode(int dest) 
+	{
+		this.dest = dest;
+	}
+
+	public void init(String jsonSTR) 
+	{
+		if(!jsonSTR.isEmpty())
+		{
+			Robot robotFromJson = new Robot();
+			try{
+				JSONObject obj      = new JSONObject(jsonSTR);
+				JSONObject robot    = obj.getJSONObject("Robot");
+				robotFromJson.id    = robot.getInt("id");
+				robotFromJson.src   = robot.getInt("src");
+				robotFromJson.dest  = robot.getInt("dest");
+				String pos          = robot.getString("pos");
+				robotFromJson.pos   = new Point3D(pos);
+				robotFromJson.value = robot.getInt("value");
+				robotFromJson.speed = robot.getDouble("speed");
+
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void toJSON(String toJSON)
+	{
+		try 
+		{
+			JSONObject obj   = new JSONObject(toJSON);
+			JSONObject robot = obj.getJSONObject("Robot");
+			this.src         = robot.getInt("src");
+			String pos       = robot.getString("pos");
+			this.pos         = new Point3D(pos);
+			this.id          = robot.getInt("id");
+			this.dest        = robot.getInt("dest");
+			this.value       = robot.getInt("value");
+			this.speed       = robot.getDouble("speed");
+
+		} catch (Exception e) 
+
+		{
+			e.printStackTrace();
+		}
+	}
+
+}
+
+/* public class Robot implements robotINT 
+{
 	private int dest;
 	private Point3D pos;
 	private int id;
@@ -199,3 +330,4 @@ public class Robot implements robotINT
 		}
 	}
 }
+ */
