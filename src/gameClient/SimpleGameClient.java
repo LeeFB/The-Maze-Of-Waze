@@ -45,6 +45,7 @@ public class SimpleGameClient {
             line = new JSONObject(info);
             JSONObject ttt = line.getJSONObject("GameServer");
             int rs = ttt.getInt("robots");
+            System.out.println(rs);
             System.out.println(info);
             System.out.println(g);
             // the list of fruits should be considered in your solution

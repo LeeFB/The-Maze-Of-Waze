@@ -15,14 +15,14 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
@@ -50,10 +50,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * LinkList for the robots and fruits in the game
      */
-    private LinkedList<Fruit> fruits = new LinkedList<>();
-    private LinkedList<Robot> robots = new LinkedList<>();
+    private LinkedList<Fruit> fruits;
+    private LinkedList<Robot> robots;
 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
+
+
+    ImageIcon map = new ImageIcon("src/Utils/map/A0.png");
     /**
      * INIT game
      **/
@@ -75,7 +78,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         level = askForLevel();
         game = Game_Server.getServer(level); // you have [0,23] games
-
         //init the game graph
         String graphStr = game.getGraph();
         this.graph = new DGraph();
@@ -83,18 +85,55 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         //set the points range of the graph
         setRangeX();
         setRangeY();
-        //get the list of fruits
+
+        //get the list of fruits and add them to the game
         getFruits();
+
+        //addRobots
+        addRobots();
         getRobots();
 
-        statGame();
+        game.startGame();
+
+        Thread gamePlay = new Thread(this::run );
+        try {
+            gamePlay.start();
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
 
         this.addMouseListener(this);
 
 
     }
 
+    private void addRobots() {
+        String info = game.toString();
+        System.out.println(info);
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            JSONObject ttt = line.getJSONObject("GameServer");
+            int rs = ttt.getInt("robots");
+            System.out.println(rs);
+
+            int src_node = 0;  // arbitrary node, you should start at one of the fruits
+            for (int a = 0; a < rs; a++) {
+                game.addRobot(src_node + a);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
     private void getFruits() {
+        fruits  = new LinkedList<>();
         for (String s : game.getFruits()) {
             System.out.println(s);
             JSONObject obj;
@@ -115,8 +154,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     private void getRobots(){
+        robots  = new LinkedList<>();
         for (String s : game.getRobots()) {
-            System.out.println(s);
             robots.add(new Robot(s));
         }
 
@@ -134,7 +173,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         System.out.println("No corresponding edge");
         return null;
     }
-
 
     private void statGame() {
 
@@ -181,15 +219,18 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     public void paint(Graphics g){
-        if (gameLayout == null)
+        g.clearRect(0,0,width,height);
+        if (gameLayout == null){
             paintComponent(g);
+        }
         Graphics2D layoutCan = (Graphics2D)g;
         layoutCan.drawImage(gameLayout,null,0,0);
 
-        for (Fruit f : fruits) {
-            g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 15 ,(int)(rescaleY(f.getLocation().y())) - 15 ,Color.BLUE,this);
+        for (Fruit f : fruits)
+            g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 16 ,(int)(rescaleY(f.getLocation().y())) - 16 ,this);
+        for (Robot r : robots)
+            g.drawImage(r.getImg(),(int)rescaleX(r.getLocation().x()) - 16 ,(int)(rescaleY(r.getLocation().y())) - 16 ,this);
 
-        }
 
 
 
@@ -206,7 +247,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         gameLayout = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         super.paint(g);
-
         DGraph graph = this.graph;
 
         Graphics2D graphics = gameLayout.createGraphics();
@@ -256,8 +296,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 }
             }
         }
-        Graphics2D layoutCan = (Graphics2D)g;
-        layoutCan.drawImage(gameLayout,null,0,0);
     }
 
     /**
@@ -290,8 +328,85 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void run() {
+        while (game.isRunning() ) {
+            System.out.println("Thread");
+            long dt =120;
+            moveRobots(game, graph);
+            try{
+                getRobots();
+                getFruits();
+                repaint();
+                Thread.sleep(dt);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
 
     }
+
+
+    /**
+     * Moves each of the robots along the edge,
+     * in case the robot is on a node the next destination (next edge) is chosen (randomly).
+     *
+     * @param game
+     * @param gg
+     * @param log
+     */
+    private static void moveRobots(game_service game, DGraph gg) {
+        List<String> log = game.move();
+        if (log != null) {
+            long t = game.timeToEnd();
+            for (int i = 0; i < log.size(); i++) {
+                String robot_json = log.get(i);
+                try {
+                    JSONObject line = new JSONObject(robot_json);
+                    JSONObject ttt = line.getJSONObject("Robot");
+                    int rid = ttt.getInt("id");
+                    int src = ttt.getInt("src");
+                    int dest = ttt.getInt("dest");
+
+                    if (dest == -1) {
+                        dest = nextNode(gg, src);
+                        game.chooseNextEdge(rid, dest);
+                        System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
+                        System.out.println(ttt);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * a very simple random walk implementation!
+     *
+     * @param g
+     * @param src
+     * @return
+     */
+    private static int nextNode(DGraph g, int src) {
+        int ans = -1;
+        Collection<edge_data> ee = g.getE(src);
+        Iterator<edge_data> itr = ee.iterator();
+        int s = ee.size();
+        int r = (int) (Math.random() * s);
+        int i = 0;
+        while (i < r) {
+            itr.next();
+            i++;
+        }
+        ans = itr.next().getDest();
+        return ans;
+    }
+
+
+
+
+
+
 
 
     /**
@@ -334,7 +449,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        System.out.println("Frame:" + "[" + e.getX() + ","+ e.getY() + "]" + "Scaled:" + "[" + rescaleX(e.getX()) + ","+ rescaleY(e.getY()) + "]");
+        int scalePressX = e.getX();
+        int scalePressY = e.getY();
+        for (Robot r : robots ){
+        }
 
     }
 

@@ -30,7 +30,6 @@ public interface graph {
     /**
      * add a new node to the graph with the given node_data.
      * Note: this method should run in O(1) time.
-     *
      * @param n
      */
     public void addNode(node_data n);

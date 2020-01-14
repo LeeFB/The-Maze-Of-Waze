@@ -30,14 +30,9 @@ public class Fruit implements fruitsINT {
         this.edge = edge;
         this.type = type;
         if (type == 1)
-            img = new ImageIcon("src/Utils/icon/banana-32.png"); //Banana
+            img = new ImageIcon("src/Utils/icon/vagina(1).png"); //Banana
         else
-            img = new ImageIcon("src/Utils/icon/icons8-apple-32.png"); //Apple
-
-    }
-
-    public Fruit(String info,edge_data edge){
-
+            img = new ImageIcon("src/Utils/icon/vagina(2).png"); //Apple
 
     }
 
@@ -69,7 +64,6 @@ public class Fruit implements fruitsINT {
     }
 
     /**
-     *
      * @return the fruit icon
      */
     public Image getImg(){
@@ -94,7 +88,7 @@ public class Fruit implements fruitsINT {
      */
     @Override
     public double grap(Robot r, double dist) {
-        if (r != null && r.getNextNode() == edge.getDest())
+        if (r != null && r.getSrcNode() == edge.getDest())
             if(dist > r.getLocation().distance3D(location))
                 return value;
         return 0;
