@@ -10,6 +10,8 @@ import graph.dataStructure.edge_data;
 import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 import graph.utils.Range;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +21,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 
 
@@ -47,9 +50,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * LinkList for the robots and fruits in the game
      */
-    private LinkedList<Fruit> fruits;
-    private LinkedList<Robot> robots;
+    private LinkedList<Fruit> fruits = new LinkedList<>();
+    private LinkedList<Robot> robots = new LinkedList<>();
 
+    private static DecimalFormat df2 = new DecimalFormat("#.##");
     /**
      * INIT game
      **/
@@ -85,8 +89,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         statGame();
 
-
-
+        this.addMouseListener(this);
 
 
     }
@@ -94,7 +97,20 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private void getFruits() {
         for (String s : game.getFruits()) {
             System.out.println(s);
-            fruits.add(new Fruit(s));
+            JSONObject obj;
+            try {
+                obj = new JSONObject(s);
+                JSONObject fruit = obj.getJSONObject("Fruit");
+                double value = fruit.getDouble("value");
+                Point3D location = new Point3D(fruit.getString("pos"));
+                int type = fruit.getInt("type");
+                edge_data edge = findEdge(location);
+
+                fruits.add(new Fruit(location,type,value,edge));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -106,7 +122,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    private edge_data findEdge(Point3D p){
+    private edge_data findEdge(Point3D p) {
         for (node_data node : graph.getV())
             for (edge_data edge : graph.getE(node.getKey())) {
                 node_data src = graph.getNode(edge.getSrc());
@@ -170,6 +186,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         Graphics2D layoutCan = (Graphics2D)g;
         layoutCan.drawImage(gameLayout,null,0,0);
 
+        for (Fruit f : fruits) {
+            g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 15 ,(int)(rescaleY(f.getLocation().y())) - 15 ,Color.BLUE,this);
+
+        }
+
 
 
     }
@@ -231,7 +252,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     graphics.fillOval((int) ((srcXPixel * 10 + destXPixel * 2) / 12) - 5, (int) ((srcYPixel * 10 + destYPixel * 2) / 12) - 6, 10, 10);
 
                     graphics.setColor(Color.DARK_GRAY);
-                    graphics.drawString(String.valueOf(edge.getWeight()), (int) ((srcXPixel * 2 + destXPixel) / 3) - 5, (int) ((srcYPixel * 2 + destYPixel) / 3) - 6);
+                    graphics.drawString(String.valueOf(df2.format(edge.getWeight())), (int) ((srcXPixel * 2 + destXPixel) / 3) - 5, (int) ((srcYPixel * 2 + destYPixel) / 3) - 6);
                 }
             }
         }
@@ -313,6 +334,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        System.out.println("Frame:" + "[" + e.getX() + ","+ e.getY() + "]" + "Scaled:" + "[" + rescaleX(e.getX()) + ","+ rescaleY(e.getY()) + "]");
 
     }
 

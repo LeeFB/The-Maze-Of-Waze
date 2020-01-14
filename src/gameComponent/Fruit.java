@@ -6,10 +6,9 @@ import graph.utils.Point3D;
 import oop_dataStructure.oop_edge_data;
 import oop_elements.OOP_Edge;
 import oop_utils.OOP_Point3D;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Fruit implements fruitsINT {
 
@@ -25,40 +24,20 @@ public class Fruit implements fruitsINT {
      * @param value    - The value in game of the fruit
      * @param edge     - The edge the fruit is on
      */
-    public Fruit(Point3D location, double value, edge_data edge){
+    public Fruit(Point3D location, int type, double value, edge_data edge){
         this.location = new Point3D(location);
         this.value = value;
         this.edge = edge;
-        if (edge.getSrc() - edge.getDest() > 0) {
-            type = 1;
-            img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/banana-64.png"); //Banana
-        }
-        else{
-            type = -1;
-            img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/icons8-apple-64.png"); //Apple
-        }
+        this.type = type;
+        if (type == 1)
+            img = new ImageIcon("src/Utils/icon/banana-32.png"); //Banana
+        else
+            img = new ImageIcon("src/Utils/icon/icons8-apple-32.png"); //Apple
+
     }
 
-    public Fruit(String info){
-        try {
-            JSONObject fruit = new JSONObject(info);
-            location = new Point3D((String) fruit.get("pos"));
-            value = fruit.getDouble("value");
-            type = fruit.getInt("type");
-            edge = null;
-            //findEdge();
-            if (edge.getSrc() - edge.getDest() > 0) {
-                type = 1;
-                img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/banana-64.png"); //Banana
-            }
-            else{
-                type = -1;
-                img = new ImageIcon("C:/Users/ASUS/IdeaProjects/Ex3/src/Utils/icon/icons8-apple-64.png"); //Apple
-            }
+    public Fruit(String info,edge_data edge){
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -93,8 +72,8 @@ public class Fruit implements fruitsINT {
      *
      * @return the fruit icon
      */
-    public ImageIcon getImg(){
-        return img;
+    public Image getImg(){
+        return img.getImage();
     }
 
     public String toString() {
