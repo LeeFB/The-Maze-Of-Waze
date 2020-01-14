@@ -15,7 +15,10 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -41,8 +44,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      **/
     private DGraph graph;
 
-    private final Double EPS = 0.001;
-
     private game_service game;
     private int level;                  //The level we are playing
     private BufferedImage gameLayout;   //Buffer for the graph
@@ -56,7 +57,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
 
-    ImageIcon map = new ImageIcon("src/Utils/map/A0.png");
     /**
      * INIT game
      **/
@@ -72,7 +72,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         this.setSize(width, height);
         this.setTitle("My Game");
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         //ask for the level of the game
 
@@ -95,7 +95,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         game.startGame();
 
-        Thread gamePlay = new Thread(this::run );
+        Thread gamePlay = new Thread(this);
         try {
             gamePlay.start();
             Thread.sleep(2000);
@@ -167,6 +167,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 node_data src = graph.getNode(edge.getSrc());
                 node_data dst = graph.getNode(edge.getDest());
                 double dist = p.distance3D(src.getLocation()) + p.distance3D(dst.getLocation());
+                double EPS = 0.001;
                 if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
                     return edge;
             }
@@ -174,10 +175,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return null;
     }
 
-    private void statGame() {
-
-
-    }
 
     /**
      * ask from play what level he wants to play
@@ -189,7 +186,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        ImageIcon icon = new ImageIcon("src/Utils/icon/icon.png");
+        ImageIcon icon = new ImageIcon("src/Utils/icon/penis.png");
         Image image = icon.getImage(); // transform it
         Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
         icon = new ImageIcon(newimg);  // transform it back
@@ -352,14 +349,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      *
      * @param game
      * @param gg
-     * @param log
+     * log
      */
     private static void moveRobots(game_service game, DGraph gg) {
         List<String> log = game.move();
         if (log != null) {
             long t = game.timeToEnd();
-            for (int i = 0; i < log.size(); i++) {
-                String robot_json = log.get(i);
+            for (String robot_json : log) {
                 try {
                     JSONObject line = new JSONObject(robot_json);
                     JSONObject ttt = line.getJSONObject("Robot");
@@ -449,10 +445,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        int scalePressX = e.getX();
-        int scalePressY = e.getY();
-        for (Robot r : robots ){
-        }
+//        int scalePressX = e.getX();
+//        int scalePressY = e.getY();
 
     }
 
