@@ -1,6 +1,7 @@
 package gameComponent;
 
 import graph.utils.Point3D;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
