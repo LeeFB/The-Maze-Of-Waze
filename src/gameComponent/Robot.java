@@ -1,6 +1,11 @@
 package gameComponent;
 
 import graph.utils.Point3D;
+
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,7 +19,7 @@ public class Robot {
 	private int id;
 	private double value;
 	private double speed;
-
+	private ImageIcon img_r;  
 
 	public Robot()
 	{
@@ -26,7 +31,7 @@ public class Robot {
 		this.speed = 0;
 	}
 
-	public Robot(int src, Point3D pos, int id, int dest, double value, double speed)
+	public Robot(int src, Point3D pos, int id, int dest, double value, double speed, ImageIcon img)
 	{
 		this.src = src;
 		this.pos = new Point3D(pos);
@@ -34,6 +39,36 @@ public class Robot {
 		this.dest = dest;
 		this.value = value;
 		this.speed = speed;
+		this.img_r = new ImageIcon ("src/Utils/icon/robotic.png"); 
+	}
+
+	public void init(String jsonSTR) 
+	{
+		if(!jsonSTR.isEmpty())
+		{
+			Robot robotFromJson = new Robot();
+			try{
+				JSONObject obj      = new JSONObject(jsonSTR);
+				JSONObject robot    = obj.getJSONObject("Robot");
+				robotFromJson.id    = robot.getInt("id");
+				robotFromJson.src   = robot.getInt("src");
+				robotFromJson.dest  = robot.getInt("dest");
+				String pos          = robot.getString("pos");
+				robotFromJson.pos   = new Point3D(pos);
+				robotFromJson.value = robot.getInt("value");
+				robotFromJson.speed = robot.getDouble("speed");
+
+			}catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String toJSON()
+	{
+		String ans = "{\"Robot\":{\"id\":" + this.id + "," + "\"value\":" + this.value+ "," + "\"src\":" + src + "," + "\"dest\":" + dest + "," + "\"speed\":" + this.getSpeed() + "," + "\"pos\":\"" + this.pos.toString() + "\"" + "}" + "}";
+		return ans;
 	}
 
 	public int getID() 
@@ -91,49 +126,11 @@ public class Robot {
 		this.dest = dest;
 	}
 
-	public void init(String jsonSTR) 
+	public Image getImg()
 	{
-		if(!jsonSTR.isEmpty())
-		{
-			Robot robotFromJson = new Robot();
-			try{
-				JSONObject obj      = new JSONObject(jsonSTR);
-				JSONObject robot    = obj.getJSONObject("Robot");
-				robotFromJson.id    = robot.getInt("id");
-				robotFromJson.src   = robot.getInt("src");
-				robotFromJson.dest  = robot.getInt("dest");
-				String pos          = robot.getString("pos");
-				robotFromJson.pos   = new Point3D(pos);
-				robotFromJson.value = robot.getInt("value");
-				robotFromJson.speed = robot.getDouble("speed");
-
-			}catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
+		return img_r.getImage();
 	}
 
-	public void toJSON(String toJSON)
-	{
-		try 
-		{
-			JSONObject obj   = new JSONObject(toJSON);
-			JSONObject robot = obj.getJSONObject("Robot");
-			this.src         = robot.getInt("src");
-			String pos       = robot.getString("pos");
-			this.pos         = new Point3D(pos);
-			this.id          = robot.getInt("id");
-			this.dest        = robot.getInt("dest");
-			this.value       = robot.getInt("value");
-			this.speed       = robot.getDouble("speed");
-
-		} catch (Exception e) 
-
-		{
-			e.printStackTrace();
-		}
-	}
 
 }
 
