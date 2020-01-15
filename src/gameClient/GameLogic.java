@@ -45,11 +45,10 @@ public class GameLogic
 		return ans;
 	}
 
-	/*public int NextNode(LinkedList<Fruit> fruits, Robot r)                                                                                       
+	public int NextNode(LinkedList<Fruit> fruits, Robot r)                                                                                       
 	{
 		double min = algo.shortestPathDist(r.getDestNode(), fruits.get(0).getEdge().getSrc());
 		int index = 0;
-		int src = 0;
 		for (int i = 0; i < fruits.size(); i++)
 		{
 			double dist = algo.shortestPathDist(r.getSrcNode(), fruits.get(i).getEdge().getSrc());
@@ -57,17 +56,10 @@ public class GameLogic
 			{
 				index = i;
 			}
-			LinkedList<node_data> WhereToGo = (LinkedList<node_data>) algo.shortestPath(r.getSrcNode(), fruits.get(index).getEdge().getSrc());
-			Iterator<node_data> it = WhereToGo.iterator();
-			while(it.hasNext())
-			{
-
-			}
-
-
-
-			return ;
 		}
-
-	}*/
+		LinkedList<node_data> WhereToGo = (LinkedList<node_data>) algo.shortestPath(r.getSrcNode(), fruits.get(index).getEdge().getSrc());
+		node_data theFirstNode = WhereToGo.get(0);
+		int nextNodeToGo = theFirstNode.getKey();
+		return nextNodeToGo;
+	}
 }
