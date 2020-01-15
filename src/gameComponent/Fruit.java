@@ -3,14 +3,11 @@ package gameComponent;
 
 import graph.dataStructure.edge_data;
 import graph.utils.Point3D;
-import oop_dataStructure.oop_edge_data;
-import oop_elements.OOP_Edge;
-import oop_utils.OOP_Point3D;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class Fruit implements fruitsINT {
+public class Fruit  {
 
     private Point3D location;           //The location of the fruit
     private double value;               //The value in game of the fruit
