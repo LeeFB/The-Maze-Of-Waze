@@ -2,6 +2,7 @@
 
 class to implements:
 Fruits - Raphael - Done
+Find Edge need to type def
 Robots - Lee - Working on it
 automationOfRobots - Raphael - Working on it
 

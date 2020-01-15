@@ -32,8 +32,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * this is the screen parameters
      */
-    private final int width = 1000;
-    private final int height = 750;
+    private final int width = 1239;
+    private final int height = 595;
     /**
      * range of node in game
      */
@@ -43,6 +43,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * the graph in the game
      **/
     private DGraph graph;
+
 
     private game_service game;
     private int level;                  //The level we are playing
@@ -57,7 +58,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
-
+    private Point3D lastPressed = new Point3D(0,0);
+    private static final double EPS = 0.001;
     /**
      * INIT game
      **/
@@ -82,6 +84,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         game = Game_Server.getServer(level); // you have [0,23] games
         //init the game graph
         String graphStr = game.getGraph();
+
+
         this.graph = new DGraph();
         this.graph.init(graphStr);
         //set the points range of the graph
@@ -95,12 +99,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         addRobots();
         getRobots();
 
-        game.startGame();
 
+        game.startGame();
         Thread gamePlay = new Thread(this);
         try {
+            Thread.sleep(3000);
             gamePlay.start();
-            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -111,11 +115,29 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    private String getMap() {
+        String info = game.toString();
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            System.out.println(line);
+            JSONObject obj = line.getJSONObject("GameServer");
+            String map = obj.getString("graph");
+            map = "src/Utils/" + map + ".png";
+            System.out.println(map);
+            return map;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
     @Override
     public void run() {
         while (game.isRunning() ) {
-            System.out.println("Thread");
-            long dt =120;
+            long dt =150;
             moveRobots(game, graph);
             try{
                 getRobots();
@@ -154,7 +176,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int dest = ttt.getInt("dest");
 
                     if (dest == -1) {
-                                 dest = nextNode(src);
+                        do {
+                            dest = nextNodeCliked(src);
+                            //System.out.println(dest);
+                        }while (dest == -1);
                         game.chooseNextEdge(rid, dest);
                         System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
                         System.out.println(ttt);
@@ -166,14 +191,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
-    /**
-     * a very simple random walk implementation!
-     *
-     * @param g
-     * @param src
-     * @return
-     */
-    private int nextNode(int src) {
+    public  int nextNode(int src) {
         int ans = -1;
         Collection<edge_data> ee = graph.getE(src);
         Iterator<edge_data> itr = ee.iterator();
@@ -190,17 +208,17 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return ans;
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-            getClikedNode(e);
-    }
 
-    private int getClikedNode(MouseEvent e) {
-        int xFrame = e.getX();
-        int yFrame = e.getY();
+    private int nextNodeCliked(int src) {
+        int xFrame = (int) lastPressed.x();
+        int yFrame = (int) lastPressed.y();
         Point3D clickedLocation = new Point3D(xFrame,yFrame);
-        for (node_data node : graph.getV()){
-            if(clickedLocation.equalsXY(node.getLocation()))
+        Point3D destLocation;
+        for (edge_data edge : graph.getE(src)){
+            node_data node = graph.getNode(edge.getDest());
+            destLocation = new Point3D(rescaleX(node.getLocation().x()),rescaleY(node.getLocation().y()));
+//            System.out.println("destination: " + destLocation);
+            if (clickedLocation.distance2D(destLocation) < 30)
                 return node.getKey();
         }
         return -1;
@@ -208,14 +226,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     private void addRobots() {
         String info = game.toString();
-        System.out.println(info);
 
         JSONObject line;
         try {
             line = new JSONObject(info);
             JSONObject ttt = line.getJSONObject("GameServer");
             int rs = ttt.getInt("robots");
-            System.out.println(rs);
 
             int src_node = 0;  // arbitrary node, you should start at one of the fruits
             for (int a = 0; a < rs; a++) {
@@ -229,10 +245,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
+    /**
+     * get info from server in JSON format and constract
+     * a list of fruits in game
+     */
     private void getFruits() {
         fruits  = new LinkedList<>();
         for (String s : game.getFruits()) {
-            System.out.println(s);
             JSONObject obj;
             try {
                 obj = new JSONObject(s);
@@ -255,9 +274,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         for (String s : game.getRobots()) {
             robots.add(new Robot(s));
         }
-
     }
 
+    //need to improve by type
     private edge_data findEdge(Point3D p) {
         for (node_data node : graph.getV())
             for (edge_data edge : graph.getE(node.getKey())) {
@@ -273,12 +292,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     public void paint(Graphics g){
+        super.paint(g);
         g.clearRect(0,0,width,height);
         if (gameLayout == null){
-            paintComponent();
+            paintComponent(g);
         }
-        Graphics2D layoutCan = (Graphics2D)g;
-        layoutCan.drawImage(gameLayout,null,0,0);
+
+        g.drawImage(gameLayout,0,0,this);
 
         for (Fruit f : fruits)
             g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);
@@ -291,16 +311,16 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      *
      * //@param g - DGraph
      */
-    public void paintComponent() {
+    public void paintComponent(Graphics g) {
         if (graph.nodeSize() == 0)
             return;
 
         gameLayout = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-        //super.paint(g);
+        super.paint(g);
         DGraph graph = this.graph;
 
         Graphics2D graphics = gameLayout.createGraphics();
-
+        graphics.drawImage(new ImageIcon(getMap()).getImage(),0,0,this);
         for (node_data p : graph.getV()) {
             double xPixel = rescaleX(p.getLocation().x());
             double yPixel = rescaleY(p.getLocation().y());
@@ -347,6 +367,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 }
             }
         }
+        Graphics2D layoutCan = (Graphics2D)g;
+        layoutCan.drawImage(gameLayout,null,0,0);
     }
 
     /**
@@ -407,7 +429,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private double rescaleX(double x) {
         return rescale(x,rangeX.get_min(),rangeX.get_max(),width*0.1,width - width*0.1);
     }
-
     private double rescaleY(double y) {
         return rescale(y,rangeY.get_min(),rangeY.get_max(),height*0.1,height - height*0.1);
 
@@ -428,7 +449,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         rangeX = new Range(min,max);
     }
-
     /**
      * set the RangeY of the graph Range[minY,maxY]
      * go over all nodes and find min,max Y
@@ -446,13 +466,21 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         rangeY = new Range(min,max);
     }
 
-
     @Override
     public void actionPerformed(ActionEvent e) {
+
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mouseClicked(MouseEvent e) {
+        lastPressed = new Point3D(e.getX(),e.getY());
+        System.out.println("lastPressed update: " + lastPressed);
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e){
+       lastPressed = new Point3D(e.getX(),e.getY());
 
     }
 
