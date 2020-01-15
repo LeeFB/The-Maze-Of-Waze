@@ -120,10 +120,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void run() {
         while (game.isRunning() ) {
             System.out.println("Time To end:" + game.timeToEnd() / 1000);
-            long dt =150;
+            long dt =200;
             moveRobots();
             try{
-
                 getRobots();
                 getFruits();
                 //for (Robot r : robots){
