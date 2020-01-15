@@ -22,8 +22,6 @@ import java.awt.event.MouseListener;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,8 +30,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * this is the screen parameters
      */
-    private final int width = 1239;
-    private final int height = 595;
+    private static final int width = 1239;
+    private static final int height = 595;
+
     /**
      * range of node in game
      */
@@ -44,9 +43,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      **/
     private DGraph graph;
 
-
     private game_service game;
     private int level;                  //The level we are playing
+    private boolean manuel;
+
     //private double score = 0;
     private BufferedImage gameLayout;   //Buffer for the graph
 
@@ -59,7 +59,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
     private Point3D lastPressed = new Point3D(0,0);
-    private static final double EPS = 0.001;
+
     /**
      * INIT game
      **/
@@ -81,6 +81,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         //ask for the level of the game
 
         level = askForLevel();
+        manuel = askForPlayType();
         game = Game_Server.getServer(level); // you have [0,23] games
         //init the game graph
         String graphStr = game.getGraph();
@@ -103,8 +104,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         game.startGame();
         Thread gamePlay = new Thread(this);
         try {
-            Thread.sleep(3000);
             gamePlay.start();
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -115,55 +116,34 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     }
 
-    private String getMap() {
-        String info = game.toString();
-
-        JSONObject line;
-        try {
-            line = new JSONObject(info);
-            System.out.println(line);
-            JSONObject obj = line.getJSONObject("GameServer");
-            String map = obj.getString("graph");
-            map = "src/Utils/" + map + ".png";
-            System.out.println(map);
-            return map;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
     @Override
     public void run() {
         while (game.isRunning() ) {
+            System.out.println("Time To end:" + game.timeToEnd() / 1000);
             long dt =150;
-            moveRobots(game, graph);
+            moveRobots();
             try{
+
                 getRobots();
                 getFruits();
-                for (Robot r : robots){
-                    Point3D p = r.getLocation();
-                    repaint();
-
-                }
+                //for (Robot r : robots){
+                repaint();
+                // }
                 Thread.sleep(dt);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
+        String results = game.toString();
+        System.out.println("Game Over: " + results);
 
     }
 
     /**
      * Moves each of the robots along the edge,
      * in case the robot is on a node the next destination (next edge) is chosen (randomly).
-     * @param game
-     * @param gg
-     * log
      */
-    private void moveRobots(game_service game, DGraph gg) {
+    private void moveRobots() {
         List<String> log = game.move();
         if (log != null) {
             long t = game.timeToEnd();
@@ -177,12 +157,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
                     if (dest == -1) {
                         do {
+
                             dest = nextNodeCliked(src);
                             //System.out.println(dest);
-                        }while (dest == -1);
+                        } while (dest == -1);
                         game.chooseNextEdge(rid, dest);
-                        System.out.println("Turn to node: " + dest + "  time to end:" + (t / 1000));
-                        System.out.println(ttt);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -190,24 +169,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             }
         }
     }
-
-    public  int nextNode(int src) {
-        int ans = -1;
-        Collection<edge_data> ee = graph.getE(src);
-        Iterator<edge_data> itr = ee.iterator();
-
-
-        int s = ee.size();
-        int r = (int) (Math.random() * s);
-        int i = 0;
-        while (i < r) {
-            itr.next();
-            i++;
-        }
-        ans = itr.next().getDest();
-        return ans;
-    }
-
 
     private int nextNodeCliked(int src) {
         int xFrame = (int) lastPressed.x();
@@ -218,66 +179,16 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             node_data node = graph.getNode(edge.getDest());
             destLocation = new Point3D(rescaleX(node.getLocation().x()),rescaleY(node.getLocation().y()));
 //            System.out.println("destination: " + destLocation);
-            if (clickedLocation.distance2D(destLocation) < 30)
+            if (clickedLocation.distance2D(destLocation) < 30){
+                lastPressed = new Point3D(0,0);
                 return node.getKey();
+            }
         }
         return -1;
     }
 
-    private void addRobots() {
-        String info = game.toString();
 
-        JSONObject line;
-        try {
-            line = new JSONObject(info);
-            JSONObject ttt = line.getJSONObject("GameServer");
-            int rs = ttt.getInt("robots");
-
-            int src_node = 0;  // arbitrary node, you should start at one of the fruits
-            for (int a = 0; a < rs; a++) {
-                game.addRobot(src_node + a);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
-
-    }
-
-    /**
-     * get info from server in JSON format and constract
-     * a list of fruits in game
-     */
-    private void getFruits() {
-        fruits  = new LinkedList<>();
-        for (String s : game.getFruits()) {
-            JSONObject obj;
-            try {
-                obj = new JSONObject(s);
-                JSONObject fruit = obj.getJSONObject("Fruit");
-                double value = fruit.getDouble("value");
-                Point3D location = new Point3D(fruit.getString("pos"));
-                int type = fruit.getInt("type");
-                edge_data edge = findEdge(location);
-
-                fruits.add(new Fruit(location,type,value,edge));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void getRobots(){
-        robots  = new LinkedList<>();
-        for (String s : game.getRobots()) {
-            robots.add(new Robot(s));
-        }
-    }
-
-    //need to improve by type
-    private edge_data findEdge(Point3D p) {
+    private edge_data findEdge(Point3D p, int type) {
         for (node_data node : graph.getV())
             for (edge_data edge : graph.getE(node.getKey())) {
                 node_data src = graph.getNode(edge.getSrc());
@@ -285,7 +196,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 double dist = p.distance3D(src.getLocation()) + p.distance3D(dst.getLocation());
                 double EPS = 0.001;
                 if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
-                    return edge;
+                    if ((type == 1 && src.getKey() < dst.getKey()) || (type == -1 && src.getKey() > dst.getKey()))
+                            return edge;
             }
         System.out.println("No corresponding edge");
         return null;
@@ -372,7 +284,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     /**
-     * ask from play what level he wants to play
+     * ask from player what level he wants to play
      * @return int number of chosen level to play
      */
     private int askForLevel() {
@@ -409,6 +321,117 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return Integer.parseInt(s);
 
     }
+
+    /**
+     * ask from player if he wants to play manually or automatic
+     * @return true if chosen to play manually
+     */
+    private boolean askForPlayType() {
+        JFrame frame = new JFrame();
+        frame.setSize(400, 400);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        ImageIcon icon = new ImageIcon("src/Utils/icon/penis.png");
+        Image image = icon.getImage(); // transform it
+        Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
+        icon = new ImageIcon(newimg);  // transform it back
+
+        Object[] possibilities = {"Manually","Automatic"};
+        String s;
+        do {
+            s = (String)JOptionPane.showInputDialog(
+                    frame,
+                    "Choose method to play level:" + level +"\n",
+                    "Level" ,
+                    JOptionPane.PLAIN_MESSAGE,
+                    icon,
+                    possibilities,
+                    "0");
+            if (s == null)
+                JOptionPane.showMessageDialog(this, "Please Choose a method to play",
+                        "ERROR", JOptionPane.ERROR_MESSAGE);
+        }while (s == null);
+
+        return s.equals("Manually");
+
+    }
+
+    /**
+     * ask for number of Robots in game and added them to the server
+     */
+    private void addRobots() {
+        String info = game.toString();
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            JSONObject ttt = line.getJSONObject("GameServer");
+            int rs = ttt.getInt("robots");
+
+            int src_node = 0;  // arbitrary node, you should start at one of the fruits
+            for (int a = 0; a < rs; a++) {
+                game.addRobot(src_node + a);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    /**
+     * get info from server in JSON format and construct
+     * a list of Fruits and Robots in game
+     */
+    private void getFruits() {
+        fruits  = new LinkedList<>();
+        for (String s : game.getFruits()) {
+            JSONObject obj;
+            try {
+                obj = new JSONObject(s);
+                JSONObject fruit = obj.getJSONObject("Fruit");
+                double value = fruit.getDouble("value");
+                Point3D location = new Point3D(fruit.getString("pos"));
+                int type = fruit.getInt("type");
+                edge_data edge = findEdge(location,type);
+
+                fruits.add(new Fruit(location,type,value,edge));
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void getRobots(){
+        robots  = new LinkedList<>();
+        for (String s : game.getRobots()) {
+            robots.add(new Robot(s));
+        }
+    }
+
+    /**
+     * @return path to map Image in utils
+     */
+    private String getMap() {
+        String info = game.toString();
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            JSONObject obj = line.getJSONObject("GameServer");
+            String map = obj.getString("graph");
+            map = "src/Utils/" + map + ".png";
+            return map;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
 
     /**
      * @param data denote some data to be scaled
@@ -480,7 +503,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e){
-       lastPressed = new Point3D(e.getX(),e.getY());
+        lastPressed = new Point3D(e.getX(),e.getY());
 
     }
 

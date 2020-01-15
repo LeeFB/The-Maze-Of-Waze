@@ -12,34 +12,33 @@ import java.awt.*;
 
 public class Fruit implements fruitsINT {
 
-	private Point3D location;           //The location of the fruit
-	private double value;               //The value in game of the fruit
-	private edge_data edge;             //The edge the fruit is on
-	private int type;                   //The type of the fruit [-1,Banana][1,Apple]
-	private ImageIcon img;              //The icon of the fruit
+    private Point3D location;           //The location of the fruit
+    private double value;               //The value in game of the fruit
+    private edge_data edge;             //The edge the fruit is on
+    private int type;                   //The type of the fruit [-1,Banana][1,Apple]
+    private ImageIcon img;              //The icon of the fruit
 
-	/**
-	 * constructor of Fruit
-	 * @param location - The location of the fruit
-	 * @param value    - The value in game of the fruit
-	 * @param edge     - The edge the fruit is on
-	 */
-	public Fruit(Point3D location, int type, double value, edge_data edge){
-		this.location = new Point3D(location);
-		this.value = value;
-		this.edge = edge;
-		this.type = type;
-		if (type == 1)
-			img = new ImageIcon("src/Utils/icon/vagina(1).png"); //Banana
-		else
-			img = new ImageIcon("src/Utils/icon/vagina(2).png"); //Apple
+    /**
+     * constructor of Fruit
+     * @param location - The location of the fruit
+     * @param value    - The value in game of the fruit
+     * @param edge     - The edge the fruit is on
+     */
+    public Fruit(Point3D location, int type, double value, edge_data edge){
+        this.location = new Point3D(location);
+        this.value = value;
+        this.edge = edge;
+        this.type = type;
+        if (type == 1)
+            img = new ImageIcon("src/Utils/icon/vagina(1).png"); //Banana
+        else
+            img = new ImageIcon("src/Utils/icon/vagina(2).png"); //Apple
 
-	}
+    }
 
-	/**
-	 * @return - The location of the fruit
-	 */
-	@Override
+    /**
+     * @return - The location of the fruit
+     */
 	public Point3D getLocation() {
 		return location;
 	}
@@ -47,63 +46,38 @@ public class Fruit implements fruitsINT {
 	/**
 	 * @return - The value in game of the fruit
 	 */
-	@Override
 	public double getValue() {
-		return value;
-	}
+        return value;
+    }
 
 	/**
 	 * type = -1 - is Apple
 	 * type = 1 - is Banana
 	 * @return - The type of the fruit
 	 */
-	@Override
 	public int getType() {
-		return type;
-	}
+        return type;
+    }
 
-	/**
-	 * @return the fruit icon
-	 */
-	public Image getImg(){
-		return img.getImage();
-	}
+    /**
+     * @return the fruit icon
+     */
+    public Image getImg(){
+        return img.getImage();
+    }
 
-	public String toString() {
-		return this.toJSON();
-	}
+    public String toString() {
+        return this.toJSON();
+    }
 
-	public String toJSON() {
-		String ans = "{\"Fruit\":{\"value\":" + this.value + "," + "\"type\":" + type + "," + "\"pos\":\"" + this.location.toString() + "\"" + "}" + "}";
-		return ans;
-	}
+    public String toJSON() {
+        String ans = "{\"Fruit\":{\"value\":" + this.value + "," + "\"type\":" + type + "," + "\"pos\":\"" + this.location.toString() + "\"" + "}" + "}";
+        return ans;
+    }
 
 	public edge_data getEdge()
 	{
 		return this.edge;
 	}
-	/**
-	 *
-	 * @param r - Robot
-	 * @param dist - desire length between fruit and robot
-	 *               in order to grab the fruit
-	 * @return - the value of the fruit else 0;
-	 */
-	@Override
-	public double grap(Robot r, double dist) {
-		if (r != null && r.getSrcNode() == edge.getDest())
-			if(dist > r.getLocation().distance3D(location))
-				return value;
-		return 0;
-	}
 
-	public static void main(String[] a) {
-		double v = 10.0D;
-		oop_edge_data e = new OOP_Edge(5, 3, 2.0);
-		OOP_Point3D p = new OOP_Point3D(1.0, 2.0, 3.0
-				);
-		Server.Fruit f = new Server.Fruit(v, p, e);
-		String s = f.toJSON();
-		System.out.println(s);
-	}
 }

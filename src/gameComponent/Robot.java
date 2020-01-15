@@ -1,7 +1,6 @@
 package gameComponent;
 
 import graph.utils.Point3D;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
@@ -17,8 +16,7 @@ public class Robot {
 	private double speed;
 	private ImageIcon img;
 
-	public Robot()
-	{
+	public Robot(){
 		this.src = 0;
 		this.pos = null;
 		this.id = -1;
@@ -28,8 +26,7 @@ public class Robot {
 		this.img = new ImageIcon("src/Utils/icon/noun_penis_340913.jpg");
 	}
 
-	public Robot(int src, Point3D pos, int id, int dest, double value, double speed)
-	{
+	public Robot(int src, Point3D pos, int id, int dest, double value, double speed){
 		this.src = src;
 		this.pos = new Point3D(pos);
 		this.id = id;
@@ -91,9 +88,6 @@ public class Robot {
 		return speed;
 	}
 
-	public void setSpeed(double var1){
-		this.speed = var1;
-	}
 
 	public int getSrcNode(){
 		return src;
