@@ -73,40 +73,49 @@ public class Robot {
 		return this.pos;
 	}
 
-	public void setLocation (Point3D loc){
+	public void setLocation (Point3D loc)
+	{
 		this.pos = loc;
 	}
 
-	public double getValue(){
+	public double getValue()
+	{
 		return value;
 	}
 
-	public void setValue(double value){
+	public void setValue(double value)
+	{
 		this.value = value;
 	}
 
-	public double getSpeed(){
+	public double getSpeed()
+	{
 		return speed;
 	}
 
 
-	public int getSrcNode(){
+	public int getSrcNode()
+	{
 		return src;
 	}
 
-	public void setSrcNode(int src){
+	public void setSrcNode(int src)
+	{
 		this.src = src;
 	}
 
-	public int getDestNode(){
+	public int getDestNode()
+	{
 		return dest;
 	}
 
-	public void setDestNode(int dest){
+	public void setDestNode(int dest)
+	{
 		this.dest = dest;
 	}
 
-	public void init(String jsonSTR){
+	public void init(String jsonSTR)
+	{
 		if(!jsonSTR.isEmpty())
 		{
 			Robot robotFromJson = new Robot();

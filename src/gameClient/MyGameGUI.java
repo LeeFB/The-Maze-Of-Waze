@@ -114,7 +114,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         this.addMouseListener(this);
 
 
-    }
+	}
 
     @Override
     public void run() {
@@ -134,7 +134,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         String results = game.toString();
         System.out.println("Game Over: " + results);
 
-    }
+	}
 
     /**
      * Moves each of the robots along the edge,
