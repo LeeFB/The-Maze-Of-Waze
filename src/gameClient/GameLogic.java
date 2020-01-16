@@ -17,17 +17,18 @@ public class GameLogic
 	private Graph_Algo algo;
 
 	/**
-	 * 
-	 * @param gameLocig
+	 *
+	 * @param
 	 * get graph 
 	 * construct Algo_graph
 	 * list of robots - updaiting all the time
 	 * as well for a list of fruit
 	 * and as well U should have an UPDATE method
 	 */
-	public GameLogic(DGraph graph){
-		this.graph   = graph;
-		this.algo = algo;
+	public GameLogic(DGraph graph,String graphStr){
+		this.graph = new DGraph();
+		this.graph.init(graphStr);
+		this.algo = new Graph_Algo(graph);
 
 	}
 
@@ -39,7 +40,7 @@ public class GameLogic
 	}
 
 	public int NextNode(LinkedList<Fruit> fruits, Robot r) {
-		double min = algo.shortestPathDist(r.getDestNode(), fruits.get(0).getEdge().getSrc());
+		double min = algo.shortestPathDist(r.getSrcNode(), fruits.get(0).getEdge().getSrc());
 		int index = 0;
 
 		for (int i = 0; i < fruits.size(); i++)	{
@@ -49,9 +50,12 @@ public class GameLogic
 			}
 		}
 
-		List<node_data> WhereToGo = algo.shortestPath(r.getSrcNode(), fruits.get(index).getEdge().getSrc());
-		node_data theFirstNode = WhereToGo.get(0);
-		int nextNodeToGo = theFirstNode.getKey();
-		return nextNodeToGo;
+		List<node_data> whereToGo = algo.shortestPath(r.getSrcNode(), fruits.get(index).getEdge().getSrc());
+		System.out.println(whereToGo);
+		if (whereToGo.size() == 1)
+			return fruits.get(index).getEdge().getDest();
+		else
+			return whereToGo.get(1).getKey();
 	}
+
 }

@@ -211,6 +211,7 @@ public class DGraph implements graph, Serializable {
             for(i = 0; i < nodes.length(); ++i) {
                 s = nodes.getJSONObject(i).getInt("id");
                 String pos = nodes.getJSONObject(i).getString("pos");
+                System.out.println(pos);
                 Point3D p = new Point3D(pos);
                 this.addNode(new Node(s, p));
             }

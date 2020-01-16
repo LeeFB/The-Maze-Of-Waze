@@ -59,6 +59,7 @@ public class Robot {
 	public String toString(){
 		return toJSON();
 	}
+
 	public String toJSON() {
 		return  "{\"Robot\":{\"id\":" + this.id + "," + "\"value\":" + this.value + "," + "\"src\":" + src + "," + "\"dest\":" + dest + "," + "\"speed\":" + this.getSpeed() + "," + "\"pos\":\"" + this.pos.toString() + "\"" + "}" + "}";
 	}

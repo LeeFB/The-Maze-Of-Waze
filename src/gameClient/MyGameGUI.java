@@ -121,13 +121,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         while (game.isRunning() ) {
             System.out.println("Time To end:" + game.timeToEnd() / 1000);
             long dt =200;
-            moveRobots();
             try{
                 getRobots();
                 getFruits();
-                //for (Robot r : robots){
+                moveRobots();
                 repaint();
-                // }
                 Thread.sleep(dt);
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -153,7 +151,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int rid = ttt.getInt("id");
                     int src = ttt.getInt("src");
                     int dest = ttt.getInt("dest");
-
                     if (dest == -1) {
                         do {
 
@@ -186,7 +183,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return -1;
     }
 
-
     private edge_data findEdge(Point3D p, int type) {
         for (node_data node : graph.getV())
             for (edge_data edge : graph.getE(node.getKey())) {
@@ -196,7 +192,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 double EPS = 0.001;
                 if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
                     if ((type == 1 && src.getKey() < dst.getKey()) || (type == -1 && src.getKey() > dst.getKey()))
-                            return edge;
+                        return edge;
             }
         System.out.println("No corresponding edge");
         return null;

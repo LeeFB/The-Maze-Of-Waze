@@ -369,7 +369,7 @@ public class Graph_Algo implements graph_algorithms, Serializable {
         /*
          * make list of nodes in path
          */
-        List<node_data> Lpath = new LinkedList<node_data>();
+        List<node_data> Lpath = new LinkedList<>();
         while (it1.hasNext()) {
             Lpath.add(algo.getNode(it1.next()));
         }
