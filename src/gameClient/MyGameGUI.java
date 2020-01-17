@@ -43,6 +43,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      **/
     private DGraph graph;
 
+    private GameLogic gameLogic;
     private game_service game;
     private int level;                  //The level we are playing
     private boolean manuel;
@@ -89,6 +90,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         this.graph = new DGraph();
         this.graph.init(graphStr);
+        this.gameLogic = new GameLogic(graph, graphStr);
+
         //set the points range of the graph
         setRangeX();
         setRangeY();
@@ -153,8 +156,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int dest = ttt.getInt("dest");
                     if (dest == -1) {
                         do {
-
-                            dest = nextNodeCliked(src);
+                            if (manuel)
+                                dest = nextNodeCliked(src);
+                            else
+                                dest = gameLogic.NextNode(fruits,robots.get(rid));
                             //System.out.println(dest);
                         } while (dest == -1);
                         game.chooseNextEdge(rid, dest);

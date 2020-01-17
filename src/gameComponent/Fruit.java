@@ -3,7 +3,6 @@ package gameComponent;
 
 import graph.dataStructure.DGraph;
 import graph.dataStructure.edge_data;
-import graph.dataStructure.graph;
 import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 
@@ -91,9 +90,7 @@ public class Fruit  {
 	 * @param usr_graph - the graph 
 	 * @return the edge that the  of fruit
 	 */
-
-	public edge_data edge(DGraph usr_graph) 
-	{
+	public edge_data edge(DGraph usr_graph) {
 		// startibng with infinity for comparison
 		double min = Double.POSITIVE_INFINITY;
 		// starting with no final edge
