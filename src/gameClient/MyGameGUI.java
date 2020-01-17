@@ -111,12 +111,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
         game.startGame();
         Thread gamePlay = new Thread(this);
-        try {
-            gamePlay.start();
-            Thread.sleep(50);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        gamePlay.start();
 
 
         this.addMouseListener(this);
@@ -128,7 +123,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     public void run() {
         while (game.isRunning() ) {
             //System.out.println("Time To end:" + game.timeToEnd() / 1000);
-            long dt =150;
+            long dt =120;
             try{
                 getRobots();
                 getFruits();
@@ -203,7 +198,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                 node_data src = graph.getNode(edge.getSrc());
                 node_data dst = graph.getNode(edge.getDest());
                 double dist = p.distance3D(src.getLocation()) + p.distance3D(dst.getLocation());
-                double EPS = 0.001;
+                double EPS = 0.00000001;
                 if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
                     if ((type == 1 && src.getKey() < dst.getKey()) || (type == -1 && src.getKey() > dst.getKey()))
                         return edge;

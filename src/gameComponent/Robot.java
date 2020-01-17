@@ -114,29 +114,6 @@ public class Robot {
 		this.dest = dest;
 	}
 
-	public void init(String jsonSTR)
-	{
-		if(!jsonSTR.isEmpty())
-		{
-			Robot robotFromJson = new Robot();
-			try{
-				JSONObject obj      = new JSONObject(jsonSTR);
-				JSONObject robot    = obj.getJSONObject("Robot");
-				robotFromJson.id    = robot.getInt("id");
-				robotFromJson.src   = robot.getInt("src");
-				robotFromJson.dest  = robot.getInt("dest");
-				String pos          = robot.getString("pos");
-				robotFromJson.pos   = new Point3D(pos);
-				robotFromJson.value = robot.getInt("value");
-				robotFromJson.speed = robot.getDouble("speed");
-
-			}catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
-
 	public Image getImg() {
 		return img.getImage();
 	}

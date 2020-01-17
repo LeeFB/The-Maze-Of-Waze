@@ -74,7 +74,7 @@ public class Fruit  {
 	 * @return a JSON String representing thr fruit
 	 */
 	public String toString() {
-		return "value:" + this.value + ", " + "type:" + type + ", " + "pos:" + this.location.toString() + ", edge:" + this.edge;
+		return "value:" + this.value + ", " + "type:" + type + ", " + ", edge:" + this.edge;
 	}
 
 	/**
@@ -86,9 +86,9 @@ public class Fruit  {
 		return ans;
 	}
 
-	public int comperTo(Fruit anotherFruit){
+	public int compare(Fruit anotherFruit){
 
-			return (int) (this.getValue() - anotherFruit.getValue());
+			return (int) (anotherFruit.getValue() - this.getValue());
 
 	}
 }

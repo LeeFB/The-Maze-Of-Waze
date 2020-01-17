@@ -14,6 +14,8 @@ public class GameLogic
 	private DGraph graph;
 	private Graph_Algo algo;
 
+
+
 	/**
 	 *
 	 * @param
@@ -31,7 +33,7 @@ public class GameLogic
 	}
 
 	public LinkedList<Integer> getStartingPoint(LinkedList<Fruit> fruits){
-		fruits.sort(Fruit::comperTo); //Sorting from most valued Fruit to less
+		fruits.sort(Fruit::compare); //Sorting from most valued Fruit to less
 		LinkedList<Integer> ans = new LinkedList<>();
 
 		for (Fruit f: fruits)
@@ -48,13 +50,12 @@ public class GameLogic
 	 * @return the valuable/closest Fruit in graph
 	 */
 	public Fruit closestFruit(LinkedList<Fruit> fruits, int src){
-		System.out.println(fruits);
-		fruits.sort(Fruit::comperTo);
-		double opFruit = fruits.get(0).getValue() / algo.shortestPathDist(src, fruits.get(0).getEdge().getSrc());
+		fruits.sort(Fruit::compare);
+		double opFruit = algo.shortestPathDist(src, fruits.get(0).getEdge().getSrc());
 		int index = 0;
 
 		for (int i = 1; i < fruits.size(); i++)	{
-			double dist = fruits.get(i).getValue() / algo.shortestPathDist(src, fruits.get(i).getEdge().getSrc());
+			double dist =  algo.shortestPathDist(src, fruits.get(i).getEdge().getSrc());
 			if(dist < opFruit){
 				index = i;
 			}
@@ -64,25 +65,27 @@ public class GameLogic
 	}
 	public int NextNode(LinkedList<Fruit> fruits, int src) {
 		Fruit OP_fruit = closestFruit(fruits,src);
-		System.out.println("the closet fruit is" + OP_fruit);
+		System.out.println("the closet fruit is " + OP_fruit);
+
+		fruits.sort(Fruit::compare);		//sort the list by Value
 
 		//if Robot is on src of fruit.edge.src go to dest
 		if (src == OP_fruit.getEdge().getSrc())
-			return OP_fruit.getEdge().getDest();
+				return OP_fruit.getEdge().getDest();
 
 		List<node_data> shortestPath = algo.shortestPath(src, OP_fruit.getEdge().getSrc());
 			return shortestPath.get(1).getKey();
 	}
 
-	private int get_fruit_dest(int src, int index, List<Fruit> fruit)	{
-		int _src = fruit.get(index).getEdge().getSrc();
-		int _dst = fruit.get(index).getEdge().getDest();
-
-		if(src == _src)
-			return _dst;
-
-		return _src;
-	}
+//	private int get_fruit_dest(int src, int index, List<Fruit> fruit)	{
+//		int _src = fruit.get(index).getEdge().getSrc();
+//		int _dst = fruit.get(index).getEdge().getDest();
+//
+//		if(src == _src)
+//			return _dst;
+//
+//		return _src;
+//	}
 
 
 //	private int NextNodeToGo(int src, List<Fruit> fruit){
