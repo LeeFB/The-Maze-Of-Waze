@@ -24,6 +24,7 @@ import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
@@ -54,8 +55,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     /**
      * LinkList for the robots and fruits in the game
      */
-    private LinkedList<Fruit> fruits;
-    private LinkedList<Robot> robots;
+    private LinkedList<Fruit> fruits = new LinkedList<>();
+    private LinkedList<Robot> robots = new LinkedList<>();
 
     private static DecimalFormat df2 = new DecimalFormat("#.##");
 
@@ -100,7 +101,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         getFruits();
 
         //addRobots
-        addRobots();
+        if (manuel)
+            addRobots();
+        else
+            addRobotsAuto();
+
         getRobots();
 
 
@@ -108,7 +113,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         Thread gamePlay = new Thread(this);
         try {
             gamePlay.start();
-            Thread.sleep(100);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -117,13 +122,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         this.addMouseListener(this);
 
 
-	}
+    }
 
     @Override
     public void run() {
         while (game.isRunning() ) {
-            System.out.println("Time To end:" + game.timeToEnd() / 1000);
-            long dt =200;
+            //System.out.println("Time To end:" + game.timeToEnd() / 1000);
+            long dt =150;
             try{
                 getRobots();
                 getFruits();
@@ -135,9 +140,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             }
         }
         String results = game.toString();
-        System.out.println("Game Over: " + results);
+        System.out.println(results);
 
-	}
+    }
 
     /**
      * Moves each of the robots along the edge,
@@ -154,13 +159,16 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
                     int rid = ttt.getInt("id");
                     int src = ttt.getInt("src");
                     int dest = ttt.getInt("dest");
+                    int value = ttt.getInt("value");
                     if (dest == -1) {
                         do {
+                            //getFruits();
                             if (manuel)
-                                dest = nextNodeCliked(src);
+                                dest = nextNodeClicked(src);
                             else
-                                dest = gameLogic.NextNode(fruits,robots.get(rid));
-                            //System.out.println(dest);
+                                dest = gameLogic.NextNode(fruits,src);
+
+                            System.out.println("Robot_ID:" + rid +" was order to go from " + src + " to " + dest);
                         } while (dest == -1);
                         game.chooseNextEdge(rid, dest);
                     }
@@ -171,7 +179,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
 
-    private int nextNodeCliked(int src) {
+    //need to improve more then 1 robot control
+    private int nextNodeClicked(int src) {
         int xFrame = (int) lastPressed.x();
         int yFrame = (int) lastPressed.y();
         Point3D clickedLocation = new Point3D(xFrame,yFrame);
@@ -203,6 +212,11 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return null;
     }
 
+    //return the time in a String format
+    private String longToStr(long time){
+        return Long.toString(time / 1000);
+    }
+
     public void paint(Graphics g){
         super.paint(g);
         g.clearRect(0,0,width,height);
@@ -210,13 +224,17 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             paintComponent(g);
         }
 
-        g.drawImage(gameLayout,0,0,this);
 
+        g.drawImage(gameLayout,0,0,this);
+        Font font = new Font("Bold", Font.BOLD,20);
+        g.setFont(font);
+        g.drawString("Time to End: " + longToStr(game.timeToEnd()),width - width/6, height / 9);
         for (Fruit f : fruits)
             g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);
         for (Robot r : robots)
             g.drawImage(r.getImg(),(int)rescaleX(r.getLocation().x()) - 8 ,(int)(rescaleY(r.getLocation().y())) - 8  ,this);
     }
+
 
     /**
      * paint a representation of a graph
@@ -358,7 +376,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     }
 
     /**
-     * ask for number of Robots in game and added them to the server
+     * ask for number of Robots in game and added them to the server manually
      */
     private void addRobots() {
         String info = game.toString();
@@ -376,6 +394,33 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * ask for number of Robots in game and added them to the server using best positioning
+     */
+    private void addRobotsAuto() {
+        String info = game.toString();
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            JSONObject ttt = line.getJSONObject("GameServer");
+            int rs = ttt.getInt("robots");
+            LinkedList<Integer> list = gameLogic.getStartingPoint(fruits);
+            for (int i = 0; i < rs; i++){
+                if (i <= list.size()){
+                    game.addRobot(list.get(i));
+                }
+                else{
+                    Random rand = new Random();
+                    game.addRobot(rand.nextInt(graph.nodeSize()));
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -386,7 +431,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
      * a list of Fruits and Robots in game
      */
     private void getFruits() {
-        fruits  = new LinkedList<>();
+        fruits.clear();
         for (String s : game.getFruits()) {
             JSONObject obj;
             try {
@@ -405,11 +450,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         }
     }
     private void getRobots(){
-        robots  = new LinkedList<>();
+        robots.clear();
         for (String s : game.getRobots()) {
             robots.add(new Robot(s));
         }
     }
+
+    //private void updateRobots(){}
 
     /**
      * @return path to map Image in utils
@@ -431,8 +478,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return null;
     }
 
-
-
     /**
      * @param data denote some data to be scaled
      * @param r_min the minimum of the range of your data
@@ -453,7 +498,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return rescale(x,rangeX.get_min(),rangeX.get_max(),width*0.1,width - width*0.1);
     }
     private double rescaleY(double y) {
-        return rescale(y,rangeY.get_min(),rangeY.get_max(),height*0.1,height - height*0.1);
+        return height - rescale(y,rangeY.get_min(),rangeY.get_max(),height*0.1,height - height*0.1);
 
     }
     /**

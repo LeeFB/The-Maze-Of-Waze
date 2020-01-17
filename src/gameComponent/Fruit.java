@@ -1,14 +1,11 @@
 package gameComponent;
 
 
-import graph.dataStructure.DGraph;
 import graph.dataStructure.edge_data;
-import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Iterator;
 
 public class Fruit  {
 
@@ -77,54 +74,21 @@ public class Fruit  {
 	 * @return a JSON String representing thr fruit
 	 */
 	public String toString() {
-		return this.toJSON();
+		return "value:" + this.value + ", " + "type:" + type + ", " + "pos:" + this.location.toString() + ", edge:" + this.edge;
 	}
 
+	/**
+	 * \
+	 * @return a JSON String representing thr fruit
+	 */
 	public String toJSON() {
 		String ans = "{\"Fruit\":{\"value\":" + this.value + "," + "\"type\":" + type + "," + "\"pos\":\"" + this.location.toString() + "\"" + "}" + "}";
 		return ans;
 	}
 
-	/**
-	 * Finds the edge of the fruit
-	 * @param usr_graph - the graph 
-	 * @return the edge that the  of fruit
-	 */
-	public edge_data edge(DGraph usr_graph) {
-		// startibng with infinity for comparison
-		double min = Double.POSITIVE_INFINITY;
-		// starting with no final edge
-		edge_data final_egde = null;
-		// sinitiating iterator for vertices
-		Iterator<node_data> It = usr_graph.getV().iterator();
-		// while we still have vertices to check
-		while(It.hasNext())
-		{
-			int key = It.next().getKey();
-			try {
-				// initiate edges iterator and check all edges
-				Iterator<edge_data> Ite = usr_graph.getE(key).iterator();
-				while(Ite.hasNext()) 
-				{
-					edge_data e = Ite.next();
-					double usr_dist = usr_graph.getNode(e.getSrc()).getLocation().distance2D(usr_graph.getNode(e.getDest()).getLocation());
-					double src_dist = this.getLocation().distance2D(usr_graph.getNode(e.getSrc()).getLocation());
-					double dst_dist = this.getLocation().distance2D(usr_graph.getNode(e.getDest()).getLocation());
-					double dist = Math.abs((src_dist + dst_dist) - usr_dist);
-					if( dist < min)
-					{
-						final_egde = e;
-						min = dist;
-					}
-				}
-			} catch(NullPointerException e) {}
-		}
-		double final_egde_src = final_egde.getSrc();
-		double final_egde_dst = final_egde.getDest();
-		if (( (final_egde_src - final_egde_dst > 0) && (this.type == 1) ) || ( (final_egde_src - final_egde_dst) < 0 && (this.type != 1) ))
-		{
-			return final_egde;
-		}
-		return usr_graph.getEdge(final_egde.getDest(), final_egde.getSrc());
+	public int comperTo(Fruit anotherFruit){
+
+			return (int) (this.getValue() - anotherFruit.getValue());
+
 	}
 }

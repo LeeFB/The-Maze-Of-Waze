@@ -1,14 +1,12 @@
 package gameClient;
 
 import gameComponent.Fruit;
-import gameComponent.Robot;
 import graph.algorithms.Graph_Algo;
 import graph.dataStructure.DGraph;
 import graph.dataStructure.node_data;
 
 import java.util.LinkedList;
 import java.util.List;
-
 
 public class GameLogic
 {
@@ -19,7 +17,7 @@ public class GameLogic
 	/**
 	 *
 	 * @param
-	 * get graph 
+	 * graphStr graph
 	 * construct Algo_graph
 	 * list of robots - updaiting all the time
 	 * as well for a list of fruit
@@ -33,29 +31,79 @@ public class GameLogic
 	}
 
 	public LinkedList<Integer> getStartingPoint(LinkedList<Fruit> fruits){
-		LinkedList<Integer> ans = new LinkedList<Integer>();
+		fruits.sort(Fruit::comperTo); //Sorting from most valued Fruit to less
+		LinkedList<Integer> ans = new LinkedList<>();
+
 		for (Fruit f: fruits)
-			ans.add(f.getEdge().getSrc());
-		return ans;
+			ans.add(f.getEdge().getSrc());		//add the fruit src to the list
+
+		//System.out.println(ans);
+		return ans;								//return ans list
 	}
 
-	public int NextNode(LinkedList<Fruit> fruits, Robot r) {
-		double min = algo.shortestPathDist(r.getSrcNode(), fruits.get(0).getEdge().getSrc());
+	/**
+	 *
+	 * @param fruits the list of fruit in game
+	 * @param src the nodeID the robot is on
+	 * @return the valuable/closest Fruit in graph
+	 */
+	public Fruit closestFruit(LinkedList<Fruit> fruits, int src){
+		System.out.println(fruits);
+		fruits.sort(Fruit::comperTo);
+		double opFruit = fruits.get(0).getValue() / algo.shortestPathDist(src, fruits.get(0).getEdge().getSrc());
 		int index = 0;
 
-		for (int i = 0; i < fruits.size(); i++)	{
-			double dist = algo.shortestPathDist(r.getSrcNode(), fruits.get(i).getEdge().getSrc());
-			if(dist < min){
+		for (int i = 1; i < fruits.size(); i++)	{
+			double dist = fruits.get(i).getValue() / algo.shortestPathDist(src, fruits.get(i).getEdge().getSrc());
+			if(dist < opFruit){
 				index = i;
 			}
 		}
+		return fruits.get(index);
 
-		List<node_data> whereToGo = algo.shortestPath(r.getSrcNode(), fruits.get(index).getEdge().getSrc());
-		System.out.println(whereToGo);
-		if (whereToGo.size() == 1)
-			return fruits.get(index).getEdge().getDest();
-		else
-			return whereToGo.get(1).getKey();
 	}
+	public int NextNode(LinkedList<Fruit> fruits, int src) {
+		Fruit OP_fruit = closestFruit(fruits,src);
+		System.out.println("the closet fruit is" + OP_fruit);
+
+		//if Robot is on src of fruit.edge.src go to dest
+		if (src == OP_fruit.getEdge().getSrc())
+			return OP_fruit.getEdge().getDest();
+
+		List<node_data> shortestPath = algo.shortestPath(src, OP_fruit.getEdge().getSrc());
+			return shortestPath.get(1).getKey();
+	}
+
+	private int get_fruit_dest(int src, int index, List<Fruit> fruit)	{
+		int _src = fruit.get(index).getEdge().getSrc();
+		int _dst = fruit.get(index).getEdge().getDest();
+
+		if(src == _src)
+			return _dst;
+
+		return _src;
+	}
+
+
+//	private int NextNodeToGo(int src, List<Fruit> fruit){
+//		double min = Double.POSITIVE_INFINITY;
+//		int fruit_dest, fruit_index, fruit_to_go;
+//		fruit_dest = fruit_index = fruit_to_go = 0;
+//
+//		for (int i = 0; i < fruit.size(); i++) {
+//			if(fruit.get(i).edge(this.graph).getTag() == 0) && (this.algo.shortestPathDist(src, fruit.get(i).edge(this.graph).getSrc()) < min) ) {
+//				fruit_to_go = 1;
+//				fruit_index = i;
+//				min = this.algo.shortestPathDist(src, fruit.get(i).edge(this.graph).getSrc());
+//				fruit_dest = get_fruit_dest(src, i);
+//			}
+//		}
+//		if(fruit_to_go == 0) {
+//			fruit_dest = get_fruit_dest(src, 0);
+//		}
+//		fruit.get(fruit_index).edge(this.graph).setTag(1);
+//		graph.getEdge(fruit.get(fruit_index).edge(this.graph).getDest(), fruit.get(fruit_index).edge(this.graph).getSrc()).setTag(1);
+//		return this.algo.shortestPath(src, fruit_dest).get(1).getKey();
+//	}
 
 }
