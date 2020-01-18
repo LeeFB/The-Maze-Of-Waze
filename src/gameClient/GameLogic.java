@@ -10,20 +10,16 @@ import graph.utils.Point3D;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @authors Lee Fingerhut and Rapheal Gozlan
+ */
 public class GameLogic
 {
-
 	private DGraph graph;
 	private Graph_Algo algo;
 
-	/**
-	 *
-	 * @param
-	 * graphStr graph
-	 * construct Algo_graph
-	 * list of robots - updaiting all the time
-	 * as well for a list of fruit
-	 * and as well U should have an UPDATE method
+	/** 
+	 * constructor 
 	 */
 	public GameLogic(DGraph graph,String graphStr){
 		this.graph = new DGraph();
@@ -33,32 +29,30 @@ public class GameLogic
 	}
 
 	/**
-	 * @param fruits - the list of fruit in game
-	 * @return - the optimal fruit to go to
+	 * Find the the src nodes of all the list fruits 
+	 * @param fruits 
+	 * @return list of src nodes 
 	 */
 	public LinkedList<Integer> getStartingPoint(LinkedList<Fruit> fruits){
 		setEdgedToFruits(fruits);
-		fruits.sort(Fruit::compare);							//Sorting from most valued Fruit to less
+		fruits.sort(Fruit::compare);//Sorting from most valued Fruit to less
 		LinkedList<Integer> ans = new LinkedList<>();
-
 		for (Fruit f: fruits)
-			ans.add(f.getEdge().getSrc());						//add the fruit src to the list
-
-		return ans;								//return ans list
+			ans.add(f.getEdge().getSrc());//add the fruit src to the list
+		return ans;//return ans list
 	}
 
 	/**
-	 *
+	 * Checks which node is the closet to the robot 
 	 * @param fruits the list of fruit in game
 	 * @param src the nodeID the robot is on
-	 * @return the valuable Fruit in graph
+	 * @return the valuable/closest Fruit in graph
 	 */
 	public Fruit closestFruit(LinkedList<Fruit> fruits, int src){
 		setEdgedToFruits(fruits);
 		fruits.sort(Fruit::compare);
 		double opFruit = algo.shortestPathDist(src, fruits.get(0).getEdge().getSrc());
 		int index = 0;
-
 		for (int i = 1; i < fruits.size(); i++)	{
 			double dist =  algo.shortestPathDist(src, fruits.get(i).getEdge().getSrc());
 			if(dist < opFruit){
@@ -66,25 +60,21 @@ public class GameLogic
 			}
 		}
 		return fruits.get(index);
-
 	}
 
 	/**
-	 *
-	 * @param fruits - list of fruits in game
-	 * @param src - source node_ID of the robot
-	 * @return the
+	 * Find the next node to move the robot in the automatic game by the method shrotestPath
+	 * @param fruits 
+	 * @param src
+	 * @return the src of the next node
 	 */
 	public int NextNode(LinkedList<Fruit> fruits, int src) {
 		setEdgedToFruits(fruits);
 		Fruit OP_fruit = closestFruit(fruits,src);
-
-		fruits.sort(Fruit::compare);		//sort the list by Value
-
+		fruits.sort(Fruit::compare);//sort the list by Value
 		//if Robot is on src of fruit.edge.src go to dest
 		if (src == OP_fruit.getEdge().getSrc())
 			return OP_fruit.getEdge().getDest();
-
 		List<node_data> shortestPath = algo.shortestPath(src, OP_fruit.getEdge().getSrc());
 		return shortestPath.get(1).getKey();
 	}
@@ -112,19 +102,17 @@ public class GameLogic
 						return edge;
 			}
 		}
-
 		System.out.println("No corresponding edge");
 		return null;
 	}
 
 	/**
 	 * @param fruits - set the list of fruit in game to a current edge
-	 *               in graph
+	 *in graph
 	 */
 	private void setEdgedToFruits(LinkedList<Fruit> fruits){
 		for (Fruit f : fruits)
 			if (f.getEdge() == null)
 				f.setEdge(findEdge(f.getLocation(),f.getType()));
 	}
-
 }

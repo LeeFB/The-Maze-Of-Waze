@@ -9,6 +9,9 @@ import org.json.JSONObject;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * @authors Lee Fingerhut and Rapheal Gozlan
+ */
 public class Fruit  {
 
 	private Point3D location;           //The location of the fruit
