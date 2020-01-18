@@ -192,21 +192,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         return -1;
     }
 
-    private edge_data findEdge(Point3D p, int type) {
-        for (node_data node : graph.getV())
-            for (edge_data edge : graph.getE(node.getKey())) {
-                node_data src = graph.getNode(edge.getSrc());
-                node_data dst = graph.getNode(edge.getDest());
-                double dist = p.distance3D(src.getLocation()) + p.distance3D(dst.getLocation());
-                double EPS = 0.00000001;
-                if (Math.abs(src.getLocation().distance3D(dst.getLocation()) - dist) < EPS)
-                    if ((type == 1 && src.getKey() < dst.getKey()) || (type == -1 && src.getKey() > dst.getKey()))
-                        return edge;
-            }
-        System.out.println("No corresponding edge");
-        return null;
-    }
-
     //return the time in a String format
     private String longToStr(long time){
         return Long.toString(time / 1000);
@@ -224,12 +209,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
         Font font = new Font("Bold", Font.BOLD,20);
         g.setFont(font);
         g.drawString("Time to End: " + longToStr(game.timeToEnd()),width - width/6, height / 9);
+        g.drawString("Grade: " + getGrade(),width - width/6  , height / 9 + 25);
         for (Fruit f : fruits)
             g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);
+
         for (Robot r : robots)
             g.drawImage(r.getImg(),(int)rescaleX(r.getLocation().x()) - 8 ,(int)(rescaleY(r.getLocation().y())) - 8  ,this);
     }
-
 
     /**
      * paint a representation of a graph
@@ -428,21 +414,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
     private void getFruits() {
         fruits.clear();
         for (String s : game.getFruits()) {
-            JSONObject obj;
-            try {
-                obj = new JSONObject(s);
-                JSONObject fruit = obj.getJSONObject("Fruit");
-                double value = fruit.getDouble("value");
-                Point3D location = new Point3D(fruit.getString("pos"));
-                int type = fruit.getInt("type");
-                edge_data edge = findEdge(location,type);
-
-                fruits.add(new Fruit(location,type,value,edge));
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            fruits.add(new Fruit(s));
         }
+
+
     }
     private void getRobots(){
         robots.clear();
@@ -450,8 +425,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             robots.add(new Robot(s));
         }
     }
-
-    //private void updateRobots(){}
 
     /**
      * @return path to map Image in utils
@@ -466,6 +439,26 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
             String map = obj.getString("graph");
             map = "src/Utils/" + map + ".png";
             return map;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return - return the current grade in server
+     * in the form of String
+     */
+    private String getGrade() {
+        String info = game.toString();
+
+        JSONObject line;
+        try {
+            line = new JSONObject(info);
+            JSONObject obj = line.getJSONObject("GameServer");
+            String grade = String.valueOf(obj.getDouble("grade"));
+            return grade;
         } catch (JSONException e) {
             e.printStackTrace();
         }
