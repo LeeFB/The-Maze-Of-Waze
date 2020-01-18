@@ -3,7 +3,7 @@
 ### Introduction:
 
 In This Project:
-- develop the game "the Wise Maze game"
+- develop the game "The Maze Of Waze"
 which is based on assignment data and algorithmic data that underlies Assignment 2.
 - Create *KML* Files - which record the game and can be viewed on Google Earth.
 
