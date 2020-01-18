@@ -1,18 +1,13 @@
 package gameClient;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import Server.game_service;
-import de.micromata.opengis.kml.v_2_2_0.Kml;
 import gameComponent.Fruit;
 import gameComponent.Robot;
 import graph.dataStructure.DGraph;
@@ -22,19 +17,22 @@ import graph.utils.Point3D;
 
 public class KML_Logger {
 
-	private String level;
+	private String name;
 	private StringBuilder w;
 
+	/**
+	 *Constructor to create file
+	 * @param level
+	 */
+	public KML_Logger(String level) {
 
-
-	public void StartKml(String name) {
-		this.level = name;
+		this.name = level;
 		w = new StringBuilder();
 		w.append(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
 						"  <Document>\r\n" +
-						"    <name>	Level " + this.level + "</name>" +
+						"    <name>	Level " + name + "</name>" +
 						" <Style id=\"node\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
@@ -69,6 +67,10 @@ public class KML_Logger {
 						"    </Style>\r\n"
 				);
 	}
+	/**
+	 * 
+	 * @param g
+	 */
 	public void addNodes(graph g)
 	{
 
@@ -83,7 +85,10 @@ public class KML_Logger {
 		}
 
 	}
-
+	/**
+	 * add the fruits of the game to file
+	 * @param fruit
+	 */
 	public void addFruit(List<Fruit> fruit)
 	{
 		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -110,6 +115,10 @@ public class KML_Logger {
 		}
 	}
 
+	/**
+	 * add the robots of the game to file
+	 * @param robot
+	 */
 	public void addRobot(List<Robot> robot)
 	{
 		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
@@ -130,13 +139,15 @@ public class KML_Logger {
 					);
 		}
 	}
-
-	public void saveKML() 
+	/**
+	 * save the KML file
+	 */
+	public void saveToKML() 
 	{
 		w.append("  </Document>\r\n");
 		w.append("</kml>");
 		try {
-			PrintWriter pw = new PrintWriter(new File("name/" + this.level + ".kml")); 
+			PrintWriter pw = new PrintWriter(new File("name/" + this.name + ".kml")); 
 			pw.write(w.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
