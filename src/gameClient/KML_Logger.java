@@ -1,32 +1,36 @@
 package gameClient;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import Server.game_service;
+import de.micromata.opengis.kml.v_2_2_0.Kml;
 import gameComponent.Fruit;
 import gameComponent.Robot;
+import graph.dataStructure.DGraph;
 import graph.dataStructure.graph;
 import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 
 public class KML_Logger {
 
-
 	private String level;
-	private StringBuilder content;
+	private StringBuilder w;
 
 
 
-	public KML_Logger(String kml_name)
-	{
-		level = kml_name;
-		content = new StringBuilder();
-		content.append(
+	public void StartKml(String name) {
+		this.level = name;
+		w = new StringBuilder();
+		w.append(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
 						"  <Document>\r\n" +
@@ -34,7 +38,7 @@ public class KML_Logger {
 						" <Style id=\"node\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pushpin/wht-pushpin.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/paddle/grn-blank.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -42,7 +46,7 @@ public class KML_Logger {
 						" <Style id=\"banana\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon57.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -50,7 +54,7 @@ public class KML_Logger {
 						" <Style id=\"apple\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -65,64 +69,75 @@ public class KML_Logger {
 						"    </Style>\r\n"
 				);
 	}
-
-
-	public void Placemark(String type, Point3D Location)
+	public void addNodes(graph g)
 	{
-		Date date = new Date();
-		SimpleDateFormat p = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'");
-		String time = p.format(date);
 
-		content.append("<Placemark>\r\n" + 
-				"      <TimeStamp>\r\n" + 
-				"        <when>"+time+"</when>\r\n" + 
-				"      </TimeStamp>\r\n" + 
-				"      <styleUrl>#"+type+"</styleUrl>\r\n" + 
-				"      <Point>\r\n" + 
-				"        <coordinates>"+ Location.toString()+ "</coordinates>\r\n" + 
-				"      </Point>\r\n" + 
-				"    </Placemark>"
-				);
-	}
-
-
-	public void addNodes(graph g) 
-	{
-		for (node_data node_data : g.getV()) 
-		{
-			content.append("<Placemark>\n" + "    <description>" + "place num:").append(node_data.getKey()).append("</description>\n").append("    <Point>\n").append("      <coordinates>").append(node_data.getLocation().x()).append(",").append(node_data.getLocation().y()).append(",0</coordinates>\n").append("    </Point>\n").append("  </Placemark>\n");
+		for (node_data data : g.getV() ) {
+			w.append(	"<Placemark>\n"+
+					"<description>"+"Node num"+data.getKey()+"</description>\n"+
+					"<Point>\n"+
+					"<coordinates>"+data.getLocation().x() +","+data.getLocation().y()+","+data.getLocation().z()+"</coordinates>\n"+
+					"</Point>\n"+
+					"</Placemark>\n"
+					);
 		}
+
 	}
 
-	public void addRobot(Point3D Location)
+	public void addFruit(List<Fruit> fruit)
 	{
-		String type = "#robot";
-	}
-
-	public void addFruit(List<Fruit> fruit, String Location)
-	{
-
-		String type = "";
-		for(int i=0; i< fruit.size(); i++)
-		{
-
-			if (fruit.get(i).getType() == 1)
-				type = "#banana";
+		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+		String hour  = new SimpleDateFormat("HH:mm:ss").format(new Date());
+		String time = date+"T"+hour+"Z";
+		String type_f;
+		for (int i = 0; i < fruit.size(); i++) {
+			if(fruit.get(i).getType() == 1)
+				type_f = "banna";
 			else
 			{
-				type = "#apple";
+				type_f  = "apple";
 			}
-			Placemark(type, fruit.get(i).getLocation());
+			w.append("<Placemark>\r\n" + 
+					"      <TimeStamp>\r\n" + 
+					"        <when>"+time+"</when>\r\n" + 
+					"      </TimeStamp>\r\n" + 
+					"      <styleUrl>#"+type_f+"</styleUrl>\r\n" + 
+					"      <Point>\r\n" + 
+					"          <coordinates>"+  fruit.get(i).getLocation().y() +","+fruit.get(i).getLocation().x()+"</coordinates>\n" + 
+					"      </Point>\r\n" + 
+					"    </Placemark>"
+					);
 		}
 	}
 
+	public void addRobot(List<Robot> robot)
+	{
+		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+		String hour = new SimpleDateFormat("HH:mm:ss").format(new Date());
+		String time = date+"T"+hour+"Z";
+		String type_f = "robot";
+		for (int i = 0; i < robot.size(); i++) {
 
-	public void saveKML() {
-		content.append("  </Document>\r\n");
-		content.append("</kml>");
+			w.append("<Placemark>\r\n" + 
+					"      <TimeStamp>\r\n" + 
+					"        <when> "+time+"</when>\r\n" + 
+					"      </TimeStamp>\r\n" + 
+					"      <styleUrl>#"+type_f+"</styleUrl>\r\n" + 
+					"      <Point>\r\n" + 
+					"          <coordinates>"+  robot.get(i).getLocation().y() +","+robot.get(i).getLocation().x()+"</coordinates>\n" + 
+					"      </Point>\r\n" + 
+					"    </Placemark>"
+					);
+		}
+	}
+
+	public void saveKML() 
+	{
+		w.append("  </Document>\r\n");
+		w.append("</kml>");
 		try {
 			PrintWriter pw = new PrintWriter(new File("name/" + this.level + ".kml")); 
-			pw.write(content.toString());
+			pw.write(w.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
