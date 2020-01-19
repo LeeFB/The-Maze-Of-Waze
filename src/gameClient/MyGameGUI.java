@@ -57,7 +57,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	private LinkedList<Robot> robots = new LinkedList<>();
 	private static DecimalFormat df2 = new DecimalFormat("#.##");
 	private Point3D lastPressed = new Point3D(0,0);
-	private KML_Logger kml;
+	public static KML_Logger kml=null;
 
 	/**
 	 * INIT game
@@ -86,7 +86,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		String graphStr = game.getGraph();
 		this.graph = new DGraph();
 		this.graph.init(graphStr);
-		kml.addNodes(graph);
+		//kml.addNodes(graph);
 
 		this.gameLogic = new GameLogic(graph, graphStr);
 		//set the points range of the graph
@@ -94,14 +94,14 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		setRangeY();
 		//get the list of fruits and add them to the game
 		getFruits();
-		kml.addFruit(fruits);
+		//kml.addFruit(fruits);
 		//addRobots
 		if (manuel)
 			addRobots();
 		else
 			addRobotsAuto();
 		getRobots();
-		kml.addRobot(robots);
+		//kml.addRobot(robots);
 		game.startGame();
 		Thread gamePlay = new Thread(this);
 		gamePlay.start();
@@ -115,9 +115,9 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			long dt =120;
 			try{
 				getRobots();
-				kml.addRobot(robots);
+				//kml.addRobot(robots);
 				getFruits();
-				kml.addFruit(fruits);
+				//kml.addFruit(fruits);
 				moveRobots();
 				repaint();
 				Thread.sleep(dt);
@@ -127,7 +127,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		}
 		String results = game.toString();
 		System.out.println(results);
-		kml.save1ToKML();
+		//kml.save1ToKML();
+		kml.kmlEndAndSave();
 	}
 
 	/**
@@ -375,14 +376,30 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	 */
 	private void getFruits() {
 		fruits.clear();
+		int i = 0;
 		for (String s : game.getFruits()) {
 			fruits.add(new Fruit(s));
+			if (fruits.get(i).getType() == 1)
+			{
+				kml.PlaceMark("apple", fruits.get(i).getLocation().toString());
+				System.out.println("fruits" + fruits.get(i).getLocation().toString());
+			}
+			else
+				kml.PlaceMark("banana", fruits.get(i).getLocation().toString());
+			System.out.println("fruits" + fruits.get(i).getLocation().toString());
+
+			i++;
 		}
 	}
+
 	private void getRobots(){
 		robots.clear();
+		int i = 0;
 		for (String s : game.getRobots()) {
 			robots.add(new Robot(s));
+			kml.PlaceMark("robot", robots.get(i).getLocation().toString());
+			//	System.out.println(robots.get(i).getLocation().toString());
+			i++;
 		}
 	}
 
