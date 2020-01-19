@@ -137,7 +137,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 			JOptionPane.showMessageDialog(
 					frame,
-					"Your grade is" + getGrade() + "\n",
+					"Your Score is " + getGrade() + "\n",
 					"Game Over",
 					JOptionPane.INFORMATION_MESSAGE
 			);
