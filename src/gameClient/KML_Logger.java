@@ -17,22 +17,27 @@ import graph.utils.Point3D;
 
 public class KML_Logger {
 
-	private String name;
+	private int level;
 	private StringBuilder w;
+
+	public KML_Logger()
+	{
+
+	}
 
 	/**
 	 *Constructor to create file
 	 * @param level
 	 */
-	public KML_Logger(String level) {
+	public KML_Logger(int level) {
 
-		this.name = level;
+		this.level = level;
 		w = new StringBuilder();
 		w.append(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
 						"  <Document>\r\n" +
-						"    <name>	Level " + name + "</name>" +
+						"    <name>	Level " + this.level + "</name>" +
 						" <Style id=\"node\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
@@ -73,7 +78,6 @@ public class KML_Logger {
 	 */
 	public void addNodes(graph g)
 	{
-
 		for (node_data data : g.getV() ) {
 			w.append(	"<Placemark>\n"+
 					"<description>"+"Node num"+data.getKey()+"</description>\n"+
@@ -89,8 +93,7 @@ public class KML_Logger {
 	 * add the fruits of the game to file
 	 * @param fruit
 	 */
-	public void addFruit(List<Fruit> fruit)
-	{
+	public void addFruit(List<Fruit> fruit) {
 		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		String hour  = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		String time = date+"T"+hour+"Z";
@@ -119,8 +122,7 @@ public class KML_Logger {
 	 * add the robots of the game to file
 	 * @param robot
 	 */
-	public void addRobot(List<Robot> robot)
-	{
+	public void addRobot(List<Robot> robot) {
 		String date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 		String hour = new SimpleDateFormat("HH:mm:ss").format(new Date());
 		String time = date+"T"+hour+"Z";
@@ -147,7 +149,7 @@ public class KML_Logger {
 		w.append("  </Document>\r\n");
 		w.append("</kml>");
 		try {
-			PrintWriter pw = new PrintWriter(new File("name/" + this.name + ".kml")); 
+			PrintWriter pw = new PrintWriter(new File("name/" + this.level + ".kml")); 
 			pw.write(w.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
