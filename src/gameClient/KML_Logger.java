@@ -37,27 +37,27 @@ public class KML_Logger{
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
 						"  <Document>\r\n" +
-						"    <name>" + "Game Nanber :"+this.level + "</name>" +"\r\n"+
+						"    <name>" + "Game Namber :"+this.level + "</name>" +"\r\n"+
 						" <Style id=\"node\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal3/icon35.png</href>\r\n" +
+						"          <href>hhttp://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
 						"    </Style>" +
-						" <Style id=\"fruit-banana\">\r\n" +
+						" <Style id=\"banana\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon49.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/shapes/convenience.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
 						"    </Style>" +
-						" <Style id=\"fruit-apple\">\r\n" +
+						" <Style id=\"apple\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal5/icon56.png</href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/shapes/poi.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
@@ -65,7 +65,7 @@ public class KML_Logger{
 						" <Style id=\"robot\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/pal4/icon26.png></href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/shapes/cycling.png></href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
