@@ -1,13 +1,14 @@
 # The Maze Of Waze
 - Ex3 OOP
 
+<img src="https://github.com/m3et/Ex3/blob/master/Screen%20Shot%202020-01-19%20at%2019.46.15.png">
+
 ### Introduction:
 
 In This Project:
 - develop the game "The Maze Of Waze"
 which is based on assignment data and algorithmic data that underlies Assignment 2.
 - Create *KML* Files - which record the game and can be viewed on Google Earth.
-
 
 This project is based on building a real-time game of robots (objects) on a weighted graph and collecting fruits (objects) of numerical value ("coins") placed on the graph sides.\
 **Game time:** 30-60 seconds.\
@@ -49,4 +50,3 @@ The robot will move by using an algorithm.
 
 ### KML_Logger class
 - Creates a KML file for each game.
-
