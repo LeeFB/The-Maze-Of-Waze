@@ -131,4 +131,5 @@ public class Fruit  {
 		return (int) (anotherFruit.getValue() - this.getValue());
 
 	}
+
 }

@@ -57,6 +57,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	private LinkedList<Robot> robots = new LinkedList<>();
 	private static DecimalFormat df2 = new DecimalFormat("#.##");
 	private Point3D lastPressed = new Point3D(0,0);
+	private KML_Logger kml;
 
 	/**
 	 * INIT game
@@ -77,24 +78,30 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		//ask for the level of the game
 		level = askForLevel();
+		kml = new KML_Logger(level);
+
 		manuel = askForPlayType();
 		game = Game_Server.getServer(level); // you have [0,23] game
 		//init the game graph
 		String graphStr = game.getGraph();
 		this.graph = new DGraph();
 		this.graph.init(graphStr);
+		kml.addNodes(graph);
+
 		this.gameLogic = new GameLogic(graph, graphStr);
 		//set the points range of the graph
 		setRangeX();
 		setRangeY();
 		//get the list of fruits and add them to the game
 		getFruits();
+		kml.addFruit(fruits);
 		//addRobots
 		if (manuel)
 			addRobots();
 		else
 			addRobotsAuto();
 		getRobots();
+		kml.addRobot(robots);
 		game.startGame();
 		Thread gamePlay = new Thread(this);
 		gamePlay.start();
@@ -104,11 +111,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	@Override
 	public void run() {
 		while (game.isRunning() ) {
-			//System.out.println("Time To end:" + game.timeToEnd() / 1000);
+
 			long dt =120;
 			try{
 				getRobots();
+				kml.addRobot(robots);
 				getFruits();
+				kml.addFruit(fruits);
 				moveRobots();
 				repaint();
 				Thread.sleep(dt);
@@ -118,6 +127,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		}
 		String results = game.toString();
 		System.out.println(results);
+		kml.saveToKML();
 	}
 
 	/**
@@ -369,7 +379,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			fruits.add(new Fruit(s));
 		}
 	}
-
 	private void getRobots(){
 		robots.clear();
 		for (String s : game.getRobots()) {

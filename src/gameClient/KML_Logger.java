@@ -1,19 +1,16 @@
 package gameClient;
 
+import gameComponent.Fruit;
+import gameComponent.Robot;
+import graph.dataStructure.graph;
+import graph.dataStructure.node_data;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
-
-import gameComponent.Fruit;
-import gameComponent.Robot;
-import graph.dataStructure.DGraph;
-import graph.dataStructure.graph;
-import graph.dataStructure.node_data;
-import graph.utils.Point3D;
 
 public class KML_Logger {
 
@@ -72,6 +69,7 @@ public class KML_Logger {
 						"    </Style>\r\n"
 				);
 	}
+
 	/**
 	 * 
 	 * @param g
@@ -111,8 +109,8 @@ public class KML_Logger {
 					"      </TimeStamp>\r\n" + 
 					"      <styleUrl>#"+type_f+"</styleUrl>\r\n" + 
 					"      <Point>\r\n" + 
-					"          <coordinates>"+  fruit.get(i).getLocation().y() +","+fruit.get(i).getLocation().x()+"</coordinates>\n" + 
-					"      </Point>\r\n" + 
+					"          <coordinates>"+  fruit.get(i).getLocation().y() +","+fruit.get(i).getLocation().x()+"</coordinates>\n" +
+					"      </Point>\r\n" +
 					"    </Placemark>"
 					);
 		}
@@ -135,7 +133,7 @@ public class KML_Logger {
 					"      </TimeStamp>\r\n" + 
 					"      <styleUrl>#"+type_f+"</styleUrl>\r\n" + 
 					"      <Point>\r\n" + 
-					"          <coordinates>"+  robot.get(i).getLocation().y() +","+robot.get(i).getLocation().x()+"</coordinates>\n" + 
+					"          <coordinates>"+  robot.get(i).getLocation().y() +","+robot.get(i).getLocation().x()+"</coordinates>\n" +
 					"      </Point>\r\n" + 
 					"    </Placemark>"
 					);
@@ -144,7 +142,7 @@ public class KML_Logger {
 	/**
 	 * save the KML file
 	 */
-	public void saveToKML() 
+	public void saveToKML()
 	{
 		w.append("  </Document>\r\n");
 		w.append("</kml>");

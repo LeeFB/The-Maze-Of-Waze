@@ -10,19 +10,15 @@ import org.junit.jupiter.api.Test;
 import java.util.LinkedList;
 
 class GameLogicTest {
-    private static int scenario_num;
-    private static DGraph graph;
     private static LinkedList<Fruit> fruits = new LinkedList<>();
     private static GameLogic gameLogic;
 
-
-
     @BeforeAll
     static void main(){
-        scenario_num = 5;
+        int scenario_num = 5;
         game_service game = Game_Server.getServer(scenario_num);
         String graphSTR = game.getGraph();
-        graph = new DGraph();
+        DGraph graph = new DGraph();
         graph.init(graphSTR);
         gameLogic = new GameLogic(graph,graphSTR);
         String info = game.toString();
