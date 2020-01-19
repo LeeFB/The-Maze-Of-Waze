@@ -10,9 +10,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import Server.Game_Server;
-import Server.game_service;
-
 
 public class KML_Logger {
 
