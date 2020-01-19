@@ -112,7 +112,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	public void run() {
 		while (game.isRunning() ) {
 
-			long dt =120;
+			long dt =50;
 			try{
 				getRobots();
 				kml.addRobot(robots);
@@ -488,7 +488,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		lastPressed = new Point3D(e.getX(),e.getY());
-		System.out.println("lastPressed update: " + lastPressed);
+		//System.out.println("lastPressed update: " + lastPressed);
 
 	}
 
