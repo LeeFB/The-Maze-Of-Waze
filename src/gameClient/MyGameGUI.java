@@ -190,20 +190,22 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	}
 
 	public void paint(Graphics g){
-		super.paint(g);
-		g.clearRect(0,0,width,height);
 		if (gameLayout == null){
 			paintComponent(g);
 		}
 		g.drawImage(gameLayout,0,0,this);
+
+		//Show time to End and Grade
 		Font font = new Font("Bold", Font.BOLD,20);
 		g.setFont(font);
 		g.drawString("Time to End: " + longToStr(game.timeToEnd()),width - width/6, height / 9);
 		g.drawString("Grade: " + getGrade(),width - width/6  , height / 9 + 25);
+
 		for (Fruit f : fruits)
 			g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);
 		for (Robot r : robots)
 			g.drawImage(r.getImg(),(int)rescaleX(r.getLocation().x()) - 8 ,(int)(rescaleY(r.getLocation().y())) - 8  ,this);
+
 	}
 
 	/**
@@ -215,7 +217,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		if (graph.nodeSize() == 0)
 			return;
 		gameLayout = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		super.paint(g);
 		DGraph graph = this.graph;
 		Graphics2D graphics = gameLayout.createGraphics();
 		graphics.drawImage(new ImageIcon(getMap()).getImage(),0,0,this);
@@ -256,6 +257,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		}
 		Graphics2D layoutCan = (Graphics2D)g;
 		layoutCan.drawImage(gameLayout,null,0,0);
+
+
 	}
 
 	/**
