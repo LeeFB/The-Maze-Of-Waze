@@ -127,7 +127,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		}
 		String results = game.toString();
 		System.out.println(results);
-		kml.saveToKML();
+		kml.save1ToKML();
 	}
 
 	/**

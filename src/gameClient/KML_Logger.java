@@ -5,8 +5,11 @@ import gameComponent.Robot;
 import graph.dataStructure.graph;
 import graph.dataStructure.node_data;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -139,15 +142,33 @@ public class KML_Logger {
 					);
 		}
 	}
-	/**
-	 * save the KML file
-	 */
+
+	public void save1ToKML()
+	{
+		w.append("  </Document>\r\n");
+		w.append("</kml>");
+		try {
+			File file = new File(this.level + ".kml");
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+
+			FileWriter fw = new FileWriter(file.getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(w.toString());
+			bw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/*
 	public void saveToKML()
 	{
 		w.append("  </Document>\r\n");
 		w.append("</kml>");
 		try {
-			PrintWriter pw = new PrintWriter(new File("name/" + this.level + ".kml")); 
+			PrintWriter pw = new PrintWriter(new File("name/" + this.level + ".kml"));
+
 			pw.write(w.toString());
 			pw.close();
 		} catch (FileNotFoundException e) {
@@ -155,4 +176,5 @@ public class KML_Logger {
 			return;
 		}
 	}
+	 */
 }
