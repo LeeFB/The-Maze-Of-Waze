@@ -29,7 +29,7 @@ public class Robot {
 		this.dest = 0;
 		this.value = 0;
 		this.speed = 0;
-		this.img = new ImageIcon("src/Utils/icon/robot.png");
+		this.img = new ImageIcon("src/Utils/icon/icon.png");
 	}
 
 	public Robot(int src, Point3D pos, int id, int dest, double value, double speed){
@@ -39,7 +39,7 @@ public class Robot {
 		this.dest = dest;
 		this.value = value;
 		this.speed = speed;
-		this.img = new ImageIcon("src/Utils/icon/robot.png");
+		this.img = new ImageIcon("src/Utils/icon/icon.png");
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class Robot {
 		{
 			e.printStackTrace();
 		}
-		this.img = new ImageIcon("src/Utils/icon/robot.png");
+		this.img = new ImageIcon("src/Utils/icon/icon.png");
 	}
 
 	/**

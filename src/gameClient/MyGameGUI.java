@@ -123,7 +123,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		game.stopGame();
 		String results = game.toString();
 		System.out.println(results);
-		kml.kmlEndAndSave();
+		kml.EndAndSave_KML();
 
 		endGame();
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
@@ -135,12 +135,12 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-			JOptionPane.showMessageDialog(
-					frame,
-					"Your Score is " + getGrade() + "\n",
-					"Game Over",
-					JOptionPane.INFORMATION_MESSAGE
-			);
+		JOptionPane.showMessageDialog(
+				frame,
+				"Your Score is " + getGrade() + "\n",
+				"Game Over",
+				JOptionPane.INFORMATION_MESSAGE
+				);
 
 	}
 
@@ -282,7 +282,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		frame.setSize(400, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		ImageIcon icon = new ImageIcon("src/Utils/icon/penis.png");
+		ImageIcon icon = new ImageIcon("src/Utils/icon/icon.png");
 		Image image = icon.getImage(); // transform it
 		Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
 		icon = new ImageIcon(newimg);  // transform it back
