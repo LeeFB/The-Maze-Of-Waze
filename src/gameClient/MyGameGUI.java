@@ -15,10 +15,7 @@ import org.json.JSONObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
@@ -111,7 +108,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	public void run() {
 		while (game.isRunning() ) {
 
-			long dt =50;
+			long dt =120;
 			try{
 				getRobots();
 				getFruits();
@@ -122,9 +119,29 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 				e.printStackTrace();
 			}
 		}
+
+		game.stopGame();
 		String results = game.toString();
 		System.out.println(results);
 		kml.kmlEndAndSave();
+
+		endGame();
+		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+	}
+
+	private void endGame() {
+		JFrame frame = new JFrame();
+		frame.setSize(400, 400);
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+			JOptionPane.showMessageDialog(
+					frame,
+					"Your grade is" + getGrade() + "\n",
+					"Game Over",
+					JOptionPane.INFORMATION_MESSAGE
+			);
+
 	}
 
 	/**
@@ -300,7 +317,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		frame.setSize(400, 400);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		ImageIcon icon = new ImageIcon("src/Utils/icon/penis.png");
+		ImageIcon icon = new ImageIcon("src/Utils/icon/icon.png");
 		Image image = icon.getImage(); // transform it
 		Image newimg = image.getScaledInstance(60, 60,  Image.SCALE_SMOOTH); // scale it the smooth way
 		icon = new ImageIcon(newimg);  // transform it back
@@ -379,10 +396,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			fruits.add(new Fruit(s));
 			if (fruits.get(i).getType() == 1) {
 				kml.PlaceMark("apple", fruits.get(i).getLocation());
-				//System.out.println("fruits" + fruits.get(i).getLocation().toString());
 			} else
 				kml.PlaceMark("banana", fruits.get(i).getLocation());
-			//System.out.println("fruits" + fruits.get(i).getLocation().toString());
 
 			i++;
 		}
@@ -394,7 +409,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		for (String s : game.getRobots()) {
 			robots.add(new Robot(s));
 			kml.PlaceMark("robot", robots.get(i).getLocation());
-			//	System.out.println(robots.get(i).getLocation().toString());
 			i++;
 		}
 	}

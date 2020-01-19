@@ -52,9 +52,9 @@ public class Fruit  {
 			this.type = fruit.getInt("type");
 			this.edge = null;
 			if (type ==  -1)
-				img = new ImageIcon("src/Utils/icon/vagina(1).png"); //Banana
+				img = new ImageIcon("src/Utils/icon/banana-32.png"); //Banana
 			else
-				img = new ImageIcon("src/Utils/icon/vagina(2).png"); //Apple
+				img = new ImageIcon("src/Utils/icon/icons8-apple-32.png"); //Apple
 		}
 		catch (JSONException e) {
 			e.printStackTrace();

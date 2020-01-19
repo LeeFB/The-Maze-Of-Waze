@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 
-public class KML_Logger {
+public class KML_Logger{
 
 	private int level;
 	private StringBuilder w;
@@ -19,15 +19,14 @@ public class KML_Logger {
 	 */
 	public  KML_Logger(){}
 
-	public KML_Logger(int stage) {
+	public KML_Logger(int stage){
 		this.level = stage;
 		w = new StringBuilder();
 		kmlStart();
 	}
 
 
-	public void kmlStart()
-	{
+	public void kmlStart(){
 		w.append(
 				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n" +
 						"<kml xmlns=\"http://earth.google.com/kml/2.2\">\r\n" +
@@ -69,8 +68,7 @@ public class KML_Logger {
 	}
 
 
-	public void PlaceMark(String id, Point3D location)
-	{
+	public void PlaceMark(String id, Point3D location){
 		LocalDateTime time = LocalDateTime.now();
 		w.append(
 				"    <Placemark>\r\n" +
@@ -89,8 +87,7 @@ public class KML_Logger {
 	}
 
 
-	public void kmlEndAndSave()
-	{
+	public void kmlEndAndSave(){
 		w.append("  \r\n</Document>\r\n" +
 				"</kml>"
 		);
