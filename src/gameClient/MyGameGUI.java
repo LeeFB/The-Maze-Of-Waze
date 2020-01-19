@@ -94,7 +94,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		setRangeY();
 		//get the list of fruits and add them to the game
 		getFruits();
-		//kml.addFruit(fruits);
 		//addRobots
 		if (manuel)
 			addRobots();
@@ -115,9 +114,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			long dt =50;
 			try{
 				getRobots();
-				//kml.addRobot(robots);
 				getFruits();
-				//kml.addFruit(fruits);
 				moveRobots();
 				repaint();
 				Thread.sleep(dt);
@@ -127,7 +124,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		}
 		String results = game.toString();
 		System.out.println(results);
-		//kml.save1ToKML();
 		kml.kmlEndAndSave();
 	}
 
@@ -175,7 +171,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		for (edge_data edge : graph.getE(src)){
 			node_data node = graph.getNode(edge.getDest());
 			destLocation = new Point3D(rescaleX(node.getLocation().x()),rescaleY(node.getLocation().y()));
-			//            System.out.println("destination: " + destLocation);
 			if (clickedLocation.distance2D(destLocation) < 30){
 				lastPressed = new Point3D(0,0);
 				return node.getKey();
@@ -382,25 +377,23 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		int i = 0;
 		for (String s : game.getFruits()) {
 			fruits.add(new Fruit(s));
-			if (fruits.get(i).getType() == 1)
-			{
-				kml.PlaceMark("apple", fruits.get(i).getLocation().toString());
-				System.out.println("fruits" + fruits.get(i).getLocation().toString());
-			}
-			else
-				kml.PlaceMark("banana", fruits.get(i).getLocation().toString());
-			System.out.println("fruits" + fruits.get(i).getLocation().toString());
+			if (fruits.get(i).getType() == 1) {
+				kml.PlaceMark("apple", fruits.get(i).getLocation());
+				//System.out.println("fruits" + fruits.get(i).getLocation().toString());
+			} else
+				kml.PlaceMark("banana", fruits.get(i).getLocation());
+			//System.out.println("fruits" + fruits.get(i).getLocation().toString());
 
 			i++;
 		}
-	}
 
+	}
 	private void getRobots(){
 		robots.clear();
 		int i = 0;
 		for (String s : game.getRobots()) {
 			robots.add(new Robot(s));
-			kml.PlaceMark("robot", robots.get(i).getLocation().toString());
+			kml.PlaceMark("robot", robots.get(i).getLocation());
 			//	System.out.println(robots.get(i).getLocation().toString());
 			i++;
 		}
@@ -508,7 +501,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		lastPressed = new Point3D(e.getX(),e.getY());
-		//System.out.println("lastPressed update: " + lastPressed);
 
 	}
 

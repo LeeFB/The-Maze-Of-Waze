@@ -1,5 +1,7 @@
 package gameClient;
 
+import graph.utils.Point3D;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -63,11 +65,11 @@ public class KML_Logger {
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
 						"    </Style>"
-				);
+		);
 	}
 
 
-	public void PlaceMark(String id, String location)
+	public void PlaceMark(String id, Point3D location)
 	{
 		LocalDateTime time = LocalDateTime.now();
 		w.append(
@@ -77,10 +79,10 @@ public class KML_Logger {
 						"      </TimeStamp>\r\n" +
 						"      <styleUrl>#" + id + "</styleUrl>\r\n" +
 						"      <Point>\r\n" +
-						"        <coordinates>" + location + "</coordinates>\r\n" +
+						"         <coordinates>" + location.x() +","+ location.y() + "</coordinates>\r\n" +
 						"      </Point>\r\n" +
 						"    </Placemark>\r\n"
-				);
+		);
 
 
 
@@ -91,7 +93,7 @@ public class KML_Logger {
 	{
 		w.append("  \r\n</Document>\r\n" +
 				"</kml>"
-				);
+		);
 		try {
 			File file = new File(this.level + ".kml");
 			if (!file.exists()) {
