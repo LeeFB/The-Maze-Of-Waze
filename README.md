@@ -16,10 +16,9 @@ This project is based on building a real-time game of robots (objects) on a weig
 ### How to play the game:
 
 1. Choose level to play (0-23 options)
-2. Choose level to play
-
-
 <img src="https://github.com/m3et/Ex3/blob/master/Screen%20Shot%202020-01-19%20at%2019.59.16.png">
+2. Choose level to play
+<img src="https://github.com/m3et/Ex3/blob/master/Screen%20Shot%202020-01-19%20at%2019.59.41.png">
 
 Two options:
 - **Manually** -
