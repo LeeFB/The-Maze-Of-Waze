@@ -65,7 +65,7 @@ public class KML_Logger{
 						" <Style id=\"robot\">\r\n" +
 						"      <IconStyle>\r\n" +
 						"        <Icon>\r\n" +
-						"          <href>http://maps.google.com/mapfiles/kml/shapes/cycling.png></href>\r\n" +
+						"          <href>http://maps.google.com/mapfiles/kml/shapes/woman.png</href>\r\n" +
 						"        </Icon>\r\n" +
 						"        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>\r\n" +
 						"      </IconStyle>\r\n" +
