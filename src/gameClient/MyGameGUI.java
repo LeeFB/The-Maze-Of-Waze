@@ -61,7 +61,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		boolean manuel = askForPlayType(level);
 
 		//init the Playground
-		playGround = new PlayGround(level,manuel);
+		playGround = new PlayGround(level,manuel,loginID);
 
 		//init the game graph
 		playGround.graph = playGround.getGraph();
@@ -105,7 +105,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			if (ID == null|| ID.length() != 9 )
 				JOptionPane.showMessageDialog(this, "Please Enter a 9 char length ID",
 						"ERROR", JOptionPane.ERROR_MESSAGE);
-		}while (ID == null || ID.length() != 9);
+		}while (ID == null || ID.length() != 9 );
 
 		return Integer.parseInt(ID);
 	}

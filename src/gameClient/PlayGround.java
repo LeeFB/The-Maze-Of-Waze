@@ -26,14 +26,14 @@ public class PlayGround{
     private AutoDrive autoDrive;
     private KML_Logger kml;
     Point3D lastPressed = new Point3D(0,0);
-    private int movesNum;
 
     public DGraph getGraph() {
         return graph;
     }
 
-    public PlayGround(int level, boolean bool){
+    public PlayGround(int level, boolean bool,int id){
         this.level = level;
+        Game_Server.login(999);
         game = Game_Server.getServer(level);
         graph = new DGraph();
         graph.init(game.getGraph());
@@ -233,5 +233,9 @@ public class PlayGround{
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected void login(int id){
+
     }
 }
