@@ -95,8 +95,9 @@ public class KML_Logger{
 
 	/**
 	 * Function to close KML file and save it on data folder
+	 * @return string info of the game
 	 */
-	public void EndAndSave_KML(){
+	public String EndAndSave_KML(){
 		w.append("  \r\n</Document>\r\n" +
 				"</kml>"
 				);
@@ -113,5 +114,7 @@ public class KML_Logger{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		return w.toString();
 	}
 }
