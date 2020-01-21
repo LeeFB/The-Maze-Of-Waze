@@ -20,6 +20,10 @@ import java.text.DecimalFormat;
  * @authors Lee Fingerhut and Raphael Gozlan
  */
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
+	public static void main(String[] args) {
+		MyGameGUI game = new MyGameGUI();
+		game.setVisible(true);
+	}
 
 	private PlayGround playGround;
 	/**
@@ -355,8 +359,4 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 	}
 
-	public static void main(String[] args) {
-		MyGameGUI game = new MyGameGUI();
-		game.setVisible(true);
-	}
 }

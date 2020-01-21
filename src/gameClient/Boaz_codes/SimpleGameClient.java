@@ -75,7 +75,7 @@ public class SimpleGameClient {
      *
      * @param game
      * @param gg
-     * @param 
+     * @param
      */
     private static void moveRobots(game_service game, oop_graph gg) {
         List<String> log = game.move();
