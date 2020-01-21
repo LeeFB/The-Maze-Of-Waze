@@ -20,7 +20,7 @@ public class SimpleDB {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-			int id1 = 999;  // "dummy existing ID  
+			int id1 = 314949397;  // "dummy existing ID
 			int level = 0;
 			allUsers();
 			printLog();

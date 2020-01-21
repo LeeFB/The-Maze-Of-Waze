@@ -56,6 +56,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	 */
 	private void initGUI() {
 		//ask for the level of the game and playing type
+		int loginID = askForLogin();
 		int level = askForLevel();
 		boolean manuel = askForPlayType(level);
 
@@ -85,7 +86,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 			playGround.addRobotsAuto();
 
 		playGround.getRobots();
-		//kml.addRobot(robots);
 		playGround.startGame();
 
 		Thread gamePlay = new Thread(this);
@@ -93,11 +93,28 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		this.addMouseListener(this);
 	}
 
+	private int askForLogin() {
+		JFrame frame = new JFrame();
+		frame.setSize(400, 400);
+		frame.setLocationRelativeTo(null);
+
+		String ID;
+		do{
+			ID = JOptionPane.showInputDialog("Enter your ID:");
+
+			if (ID == null|| ID.length() != 9 )
+				JOptionPane.showMessageDialog(this, "Please Enter a 9 char length ID",
+						"ERROR", JOptionPane.ERROR_MESSAGE);
+		}while (ID == null || ID.length() != 9);
+
+		return Integer.parseInt(ID);
+	}
+
 	@Override
 	public void run() {
 		while (playGround.isRunning() ) {
 
-			long dt = 115;
+			long dt = 120;
 			try{
 				playGround.getRobots();
 				playGround.getFruits();

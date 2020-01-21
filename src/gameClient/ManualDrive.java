@@ -106,8 +106,4 @@ public class ManualDrive {
         rangeY = new Range(min,max);
     }
 
-
-
-
-
 }
