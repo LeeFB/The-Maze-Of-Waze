@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="game" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="gameClient.game" />
+  <configuration default="false" name="gameMain" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="gameClient.gameMain" />
     <module name="Ex3" />
     <extension name="coverage">
       <pattern>

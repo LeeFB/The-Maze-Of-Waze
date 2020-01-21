@@ -1,4 +1,4 @@
-package gameClient;
+package gameClient.Boaz_codes;
 
 import Server.Game_Server;
 import Server.game_service;
@@ -75,7 +75,7 @@ public class SimpleGameClient {
      *
      * @param game
      * @param gg
-     * @param log
+     * @param 
      */
     private static void moveRobots(game_service game, oop_graph gg) {
         List<String> log = game.move();

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @authors Lee Fingerhut and Rapheal Gozlan
  */
-public class GameLogic
+public class AutoDrive
 {
 	private DGraph graph;
 	private Graph_Algo algo;
@@ -21,10 +21,9 @@ public class GameLogic
 	/** 
 	 * constructor 
 	 */
-	public GameLogic(DGraph graph,String graphStr){
-		this.graph = new DGraph();
-		this.graph.init(graphStr);
-		this.algo = new Graph_Algo(graph);
+	public AutoDrive(DGraph graph){
+		this.graph = graph;
+		algo = new Graph_Algo(graph);
 
 	}
 
