@@ -16,15 +16,18 @@ import java.util.List;
 import java.util.Random;
 
 public class PlayGround{
-    private game_service game;
-    private int level;
-    protected DGraph graph;
-    protected LinkedList<Robot> robots= new LinkedList<>();
-    protected LinkedList<Fruit> fruits= new LinkedList<>();
-    private boolean manuel;
+    private game_service game;  //game server
+    private int level;          //level of game
+    protected DGraph graph;     //graph of game
+    protected LinkedList<Robot> robots= new LinkedList<>(); //list of robots in game
+    protected LinkedList<Fruit> fruits= new LinkedList<>();//list of fruit in game
+    private boolean manuel;     //playing method
+    //the driving control classes
     private ManualDrive manualDrive;
     private AutoDrive autoDrive;
+    //kml
     private KML_Logger kml;
+
     Point3D lastPressed = new Point3D(0,0);
 
     public DGraph getGraph() {
