@@ -111,7 +111,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	public void run() {
 		while (playGround.isRunning() ) {
 
-			long dt = 120;
+			long dt = 110;
 			try{
 				playGround.getRobots();
 				playGround.getFruits();
@@ -125,7 +125,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 		playGround.stopGame();
 
-		endGame();
+		endGameScreen();
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 
@@ -270,7 +270,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	/**
 	 * show the grade in a gui message
 	 */
-	private void endGame() {
+	private void endGameScreen() {
 		JFrame frame = new JFrame();
 		frame.setSize(400, 400);
 		frame.setLocationRelativeTo(null);

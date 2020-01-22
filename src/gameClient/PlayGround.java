@@ -5,8 +5,6 @@ import Server.game_service;
 import gameComponent.Fruit;
 import gameComponent.Robot;
 import graph.dataStructure.DGraph;
-import graph.dataStructure.edge_data;
-import graph.dataStructure.node_data;
 import graph.utils.Point3D;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,6 +13,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * this class is where al the gma is define and get updateds
+ * from the sever throwout the game
+ */
 public class PlayGround{
     private game_service game;  //game server
     private int level;          //level of game
@@ -36,7 +38,7 @@ public class PlayGround{
 
     public PlayGround(int level, boolean bool,int id){
         this.level = level;
-        Game_Server.login(999);
+        Game_Server.login(id);
         game = Game_Server.getServer(level);
         graph = new DGraph();
         graph.init(game.getGraph());
@@ -193,7 +195,6 @@ public class PlayGround{
         return null;
     }
 
-
     public void startGame() {
         game.startGame();
     }
@@ -206,7 +207,7 @@ public class PlayGround{
         game.stopGame();
         String results = game.toString();
         System.out.println(results);
-        kml.EndAndSave_KML();
+        game.sendKML(kml.EndAndSave_KML());
     }
 
     public String timeToEndStr() {

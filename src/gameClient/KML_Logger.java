@@ -102,10 +102,12 @@ public class KML_Logger{
 				"</kml>"
 				);
 		try {
-			File file = new File(this.level + ".kml");
-			if (!file.exists()) {
-				file.createNewFile();
-			}
+			File file = new File("C:\\Users\\ASUS\\IdeaProjects\\Ex3\\KML\\" + this.level + ".kml"); //save into KML folder
+
+			//dont need this
+//			if (!file.exists()) {
+//				file.createNewFile();
+//			}
 
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
