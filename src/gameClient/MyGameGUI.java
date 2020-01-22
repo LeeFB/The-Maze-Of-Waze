@@ -23,6 +23,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 
 	private PlayGround playGround;
+	private DB db;
 	/**
 	 * this is the screen parameters
 	 */
@@ -62,7 +63,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 		//init the game graph
 		playGround.graph = playGround.getGraph();
-
+		db = new DB();
+		_stats_ stats_level = db.userStatsLevel(203156963, level);
 		//set the window parameters
 		this.setSize(width, height);
 		this.setTitle("My Game");

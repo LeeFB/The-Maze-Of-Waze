@@ -102,13 +102,7 @@ public class KML_Logger{
 				"</kml>"
 				);
 		try {
-			File file = new File("KML\\" + this.level + ".kml"); //save into KML folder
-
-			//dont need this
-//			if (!file.exists()) {
-//				file.createNewFile();
-//			}
-
+			File file = new File(this.level + ".kml");
 			FileWriter fw = new FileWriter(file.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write(w.toString());
