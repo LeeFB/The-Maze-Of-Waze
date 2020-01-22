@@ -23,8 +23,19 @@ public class DB {
 	public static final String jdbcUrl="jdbc:mysql://db-mysql-ams3-67328-do-user-4468260-0.db.ondigitalocean.com:25060/oop?useUnicode=yes&characterEncoding=UTF-8&useSSL=false";
 	public static final String jdbcUser="student";
 	public static final String jdbcUserPassword="OOP2020student";
+	private int times;
+	private int score;
+	private int rank;
 
-	public DB() { }
+	public DB(int times, int score, int rank) {
+		this.times = times;
+		this.score = score;
+		this.rank = rank;
+	}
+	public DB() {
+		this(0, 0, 0);
+	}
+
 	/**
 	 * Simple main for demonstrating the use of the Data-base
 	 * @param args
@@ -138,7 +149,7 @@ public class DB {
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
 	 */
-	public _stats_ userStatsLevel(int id, int level) {
+	public void userStatsLevel(int id, int level) {
 		// key: id, value: best score for id
 		HashMap<Integer, Integer> scores = new HashMap<Integer, Integer>();
 		String allCustomersQuery = "SELECT * FROM Logs;";
@@ -188,7 +199,6 @@ public class DB {
 		if (!scores.containsKey(id)) {
 			//throw new RuntimeException("user with id " + id + " doesn't exist!");
 			System.out.println("user with id " + id + " doesn't exist!");
-			return new _stats_();
 		}
 
 		ArrayList<_user_> sorted_scores = new ArrayList<_user_>();
@@ -203,35 +213,22 @@ public class DB {
 			if (sorted_scores.get(i).id == id)
 				break;
 		}
+		score = sorted_scores.get(i).score;
+		times = counter;
+		rank = i;
+	}
 
-		return new _stats_(sorted_scores.get(i).score, counter, i);
-	}
-}
-
-class _stats_ {
-	int score;
-	int times;
-	int rank;
-	_stats_() { 
-		score=-1;
-		times=-1;
-		rank=-1;
-	}
-	_stats_(int s, int t, int r) { 
-		score=s;
-		times=t;
-		rank=r;
-	}
-	int getScore() {
+	public int getScore() {
 		return score;
 	}
-	int getTimes() {
+	public int getTimes() {
 		return times;
 	}
-	int getRank() {
+	public int getRank() {
 		return rank;
 	}
 }
+
 
 class _user_ {
 	int score;
