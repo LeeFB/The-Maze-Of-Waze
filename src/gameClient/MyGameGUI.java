@@ -111,7 +111,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	public void run() {
 		while (playGround.isRunning() ) {
 
-			long dt = 110;
+			long dt = 100;
 			try{
 				playGround.getRobots();
 				playGround.getFruits();
@@ -136,11 +136,13 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		g.drawImage(gameLayout,0,0,this);
 
 		//Show time to End and Grade
-		Font font = new Font("Bold", Font.BOLD,20);
+		Font font = new Font("Bold", Font.PLAIN,15);
 		g.setFont(font);
-		g.drawString("Time to End: " + playGround.timeToEndStr(),width - width/6, height / 9);
-		g.drawString("Grade: " + playGround.getGrade(),width - width/6  , height / 9 + 25);
-		g.drawString("Moves: " + playGround.getMoveNumber(),width - width/6  , height / 9 + 50);
+		g.drawString("Level: " + playGround.getLevel(),width - width/6, height / 9);
+		g.drawString("Time to End: " + playGround.timeToEndStr(),width - width/6, height / 9 + 25);
+		g.drawString("Grade: " + playGround.getGrade(),width - width/6  , height / 9 + 50);
+		g.drawString("Moves: " + playGround.getMoveNumber(),width - width/6  , height / 9 + 75);
+
 
 		for (Fruit f : playGround.fruits)
 			g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);

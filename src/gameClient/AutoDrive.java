@@ -24,20 +24,21 @@ public class AutoDrive
 	public AutoDrive(DGraph graph){
 		this.graph = graph;
 		algo = new Graph_Algo(graph);
-
 	}
 
 	/**
 	 * Find the the src nodes of all the list fruits 
-	 * @param fruits 
-	 * @return list of src nodes 
+	 * @param fruits - list of fruit in game
+	 * @return list of src nodes rated from best value to lowest
 	 */
 	public LinkedList<Integer> getStartingPoint(LinkedList<Fruit> fruits){
 		setEdgedToFruits(fruits);
 		fruits.sort(Fruit::compare);//Sorting from most valued Fruit to less
 		LinkedList<Integer> ans = new LinkedList<>();
-		for (Fruit f: fruits)
+		for (Fruit f: fruits) {
+			System.out.println(f.getValue() + ",");
 			ans.add(f.getEdge().getSrc());//add the fruit src to the list
+		}
 		return ans;//return ans list
 	}
 

@@ -38,7 +38,8 @@ public class PlayGround{
 
     public PlayGround(int level, boolean bool,int id){
         this.level = level;
-        Game_Server.login(id);
+        //TODO change id
+        Game_Server.login(999);
         game = Game_Server.getServer(level);
         graph = new DGraph();
         graph.init(game.getGraph());
