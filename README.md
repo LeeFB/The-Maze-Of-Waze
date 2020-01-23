@@ -40,12 +40,17 @@ The robot will move by using an algorithm.
 ### DGraph class
 - Represents the data structure of the graph.
 
-### GameLogic class
-- Represents the game algorithm which is based on the graph algorithm.
+### AutoDrive class
+- Represents the game algorithm which is used on the Automated game.
 
-### MyGameGUI class
+### ManualDrive class
+-Represents all the methods be used in the manual game
+
+### PlayGround class
 - Represents a game scenario that is given.
 - Imported jar file -Game_Server.
+
+### MyGameGUI class
 - Represents a Graphical וnterface of the game.
 
 ### KML_Logger class
