@@ -25,9 +25,17 @@ public class DB {
 	public static final String jdbcUser="student";
 	public static final String jdbcUserPassword="OOP2020student";
 
+	/**
+	 * constructor
+	 */
 	public DB() {
 	}
 
+	/**
+	 * the function hold all the info of the all levels game 
+	 * @param id
+	 * @return the string of the info
+	 */
 	public String getInfo(int id) {
 		return userStats(id);
 	}
@@ -144,8 +152,8 @@ public class DB {
 
 	/**
 	 * the function calculates player statistics in string
-	 * @param id - the id of the player
-	 * 
+	 * @param id
+	 * @return the string info of the player statistics
 	 */
 	public String userStats(int id) {
 		String allCustomersQuery = "SELECT levelID FROM Logs;";
@@ -200,7 +208,7 @@ public class DB {
 
 
 	/**
-	 * the function calculates player statistics
+	 * the function calculates player statistics in a Specific stage
 	 * @param id - the id of the player
 	 * @param level - the stage from the game where I want to calculate the statistics
 	 */
@@ -269,7 +277,11 @@ public class DB {
 		return new internal_stats(sorted_scores.get(i).score, counter, i);
 	}
 }
-
+/**
+ * 
+ * this class hold data of the player in the games
+ *
+ */
 class internal_stats  {
 	public int score; 
 	public int times;  
@@ -281,6 +293,10 @@ class internal_stats  {
 	}
 };
 
+/**
+ *
+ *this class hold data of the player
+ */
 class internal_user {
 	public int score;
 	public int id;
@@ -290,6 +306,9 @@ class internal_user {
 	}
 }
 
+/**
+ * sort the users
+ */
 class internal_usercomp implements Comparator<internal_user> {
 	public internal_usercomp(){}
 	public int compare(internal_user u1, internal_user u2) {
