@@ -1,5 +1,5 @@
 # The Maze Of Waze
-- Ex3 OOP
+- Ex3/Ex4 OOP
 
 <img src="https://github.com/m3et/Ex3/blob/master/screen%20shot/Screen%20Shot%202020-01-19%20at%2019.46.15.png">
 
@@ -50,3 +50,6 @@ The robot will move by using an algorithm.
 
 ### KML_Logger class
 - Creates a KML file for each game.
+
+### DB class
+- uses the Data-base
