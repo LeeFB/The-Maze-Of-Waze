@@ -2,7 +2,6 @@ package gameClient;
 
 import Server.Game_Server;
 import Server.game_service;
-import de.micromata.opengis.kml.v_2_2_0.Link;
 import gameComponent.Fruit;
 import gameComponent.Robot;
 import graph.dataStructure.DGraph;
@@ -25,6 +24,7 @@ public class PlayGround {
     private static boolean sendKML = false;
 
     private game_service game;  //game server
+    private int id;
     private int level;          //level of game
     protected DGraph graph;     //graph of game
     protected LinkedList<Robot> robots = new LinkedList<>(); //list of robots in game
@@ -44,11 +44,14 @@ public class PlayGround {
 
     public PlayGround(int level, boolean bool, int id) {
         this.level = level;
+        this.id = id;
         Game_Server.login(id);
         game = Game_Server.getServer(level);
+
         //init the DB
         dataBase = new DB();
-        dataBase.userStatsLevel(id, level);
+
+
         graph = new DGraph();
         graph.init(game.getGraph());
         kml = new KML_Logger(level);
@@ -72,7 +75,7 @@ public class PlayGround {
                     if (manuel)
                         dest = manualDrive.nextNodeClicked(src, lastPressed);
                     else {
-                        dest = autoDrive.whereMove(r,fruits);
+                        dest = autoDrive.nextNode(r,fruits);
 
                     }
 
@@ -230,7 +233,6 @@ public class PlayGround {
 
     public void stopGame() {
         game.stopGame();
-
         String results = game.toString();
         System.out.println(results);
         if (sendKML)
@@ -263,13 +265,6 @@ public class PlayGround {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public int getPlayedGamesNum() {
-        if (dataBase != null)
-            return dataBase.getTimes();
-        else
-            throw new RuntimeException("ERR: The Database is not connected");
     }
 
     public String getMaxUserLevel() {
@@ -384,5 +379,9 @@ public class PlayGround {
 
     public boolean getManuel() {
         return this.manuel;
+    }
+
+    public String getStats(){
+        return dataBase.getInfo(id);
     }
 }
