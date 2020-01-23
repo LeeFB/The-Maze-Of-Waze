@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
  */
 public class MyGameGUI extends JFrame implements ActionListener, MouseListener, Runnable {
 
-
+	public static long dt = 104;
 	private PlayGround playGround;
 
 	/**
@@ -112,18 +112,20 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 	public void run() {
 		while (playGround.isRunning() ) {
 
-			long dt = 100;
 			try{
 				playGround.updateRobots();
-				playGround.updateRobots();
+				playGround.updateFruits();
 				playGround.moveRobots();
 				repaint();
 				Thread.sleep(dt);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			if ( playGround.timeToEnd() < 10 && playGround.timeToEnd() > 8)
+				playGround.pullFruits();
+
 		}
-		System.out.println(playGround.getStats());
+
 		playGround.stopGame();
 
 		endGameScreen();
@@ -143,7 +145,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		g.drawString("Time to End: " + playGround.timeToEndStr(),width - width/6, height / 9 + 25);
 		g.drawString("Grade: " + playGround.getGrade(),width - width/6  , height / 9 + 50);
 		g.drawString("Moves: " + playGround.getMoveNumber(),width - width/6  , height / 9 + 75);
-
+		g.drawString("dt: " + dt ,width - width/6  , height / 9 + 100);
 
 		for (Fruit f : playGround.fruits)
 			g.drawImage(f.getImg(),(int)rescaleX(f.getLocation().x()) - 8 ,(int)(rescaleY(f.getLocation().y())) - 8 ,this);
@@ -221,7 +223,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 				"0","1","2","3","4","5","6",
 				"7","8","9","10","11","12",
 				"13","14","15","16","17","18",
-				"19","20","21","22","23"};
+				"19","20","21","22","23","-31"};
 		String s;
 		do {
 			s = (String)JOptionPane.showInputDialog(

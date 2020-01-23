@@ -243,6 +243,10 @@ public class PlayGround {
         return String.valueOf(game.timeToEnd() / 1000);
     }
 
+    public long timeToEnd(){
+        return game.timeToEnd() / 1000;
+    }
+
     public String getLevel() {
         return String.valueOf(level);
     }
@@ -310,59 +314,21 @@ public class PlayGround {
     public void updateFruits() {
 
         LinkedList<Fruit> temp = new LinkedList<>();
-        for (Fruit f : fruits){
-            System.out.print(f.getTag() +", ");
-        }
 
-        System.out.println();
-
-        //temp List
+        //temp List of all fruits in server
         for (String s : game.getFruits()) {
             Fruit f = new Fruit(s);
-            if (!fruits.contains(f))
-                f.setEdge(findEdge(f.getLocation(),f.getType()));
+            f.setEdge(findEdge(f.getLocation(), f.getType()));
             temp.add(f);
         }
-        //TODO fix tag
+
         for (Fruit f: temp){
             if (fruits.contains(f)){
-                //TODO ther is the problam
-                System.out.println("hgffhgfghfhgfgh");
                 f.setTag(fruits.get(fruits.indexOf(f)).getTag());
             }
         }
 
-
         fruits = temp;
-        for (Fruit f : fruits){
-            System.out.print(f.getTag() +", ");
-        }
-        System.out.println();
-
-
-//
-//        Fruit[] tempArr = new Fruit[fruits.size()];
-//        tempArr = fruits.toArray(new Fruit[0]);
-//
-//        for (Fruit f : tempArr){
-//            if (fruits.contains(f))
-//                temp.remove(f);
-//
-//        }
-//
-//        fruits.removeIf(f -> !temp.contains(f));
-//
-//        for (Fruit f : temp) {
-//            if (f.getType() == 1)
-//                kml.PlaceMark("apple", f.getLocation());
-//            else
-//                kml.PlaceMark("banana", f.getLocation());
-//
-//            f.setEdge(findEdge(f.getLocation(), f.getType()));
-//            fruits.add(f);
-//
-//        }
-
     }
 
     public void updateRobots() {
