@@ -3,6 +3,7 @@ package gameClient.Test;
 import Server.Game_Server;
 import Server.game_service;
 import gameClient.AutoDrive;
+import gameClient.PlayGround;
 import gameComponent.Fruit;
 import graph.dataStructure.DGraph;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,7 +22,7 @@ class AutoDriveTest {
         String graphSTR = game.getGraph();
         DGraph graph = new DGraph();
         graph.init(graphSTR);
-        autoDrive = new AutoDrive(graph);
+        autoDrive = new AutoDrive();
         String info = game.toString();
         fruits.clear();
         for (String s : game.getFruits()) {
@@ -43,12 +44,12 @@ class AutoDriveTest {
         System.out.println("gameClient.Test closestFruit: \n" +
                 "Calculate the optimal fruit from node_ID by order of most valuable fruit on graph");
 
-        System.out.println(autoDrive.closestFruit(fruits,1));
-        System.out.println(autoDrive.closestFruit(fruits,7));
-        System.out.println(autoDrive.closestFruit(fruits,12));
-        System.out.println(autoDrive.closestFruit(fruits,1));
-        System.out.println(autoDrive.closestFruit(fruits,9));
-        System.out.println(autoDrive.closestFruit(fruits,3));
+        System.out.println(autoDrive.closestFruit(1, fruits));
+        System.out.println(autoDrive.closestFruit(7, fruits));
+        System.out.println(autoDrive.closestFruit(12, fruits));
+        System.out.println(autoDrive.closestFruit(1, fruits));
+        System.out.println(autoDrive.closestFruit(9, fruits));
+        System.out.println(autoDrive.closestFruit(3, fruits));
     }
 
     @Test
@@ -56,14 +57,14 @@ class AutoDriveTest {
         System.out.println("gameClient.Test NextNode: \n" +
                 "Calculate the optimal node_ID the robot_ID should go");
 
-        System.out.println(autoDrive.NextNode(fruits,1));
-        System.out.println(autoDrive.NextNode(fruits,7));
-        System.out.println(autoDrive.NextNode(fruits,12));
-        System.out.println(autoDrive.NextNode(fruits,7));
-        System.out.println(autoDrive.NextNode(fruits,12));
-        System.out.println(autoDrive.NextNode(fruits,1));
-        System.out.println(autoDrive.NextNode(fruits,9));
-        System.out.println(autoDrive.NextNode(fruits,3));
+        System.out.println(autoDrive.valueDistFruit(fruits,1));
+        System.out.println(autoDrive.valueDistFruit(fruits,7));
+        System.out.println(autoDrive.valueDistFruit(fruits,12));
+        System.out.println(autoDrive.valueDistFruit(fruits,7));
+        System.out.println(autoDrive.valueDistFruit(fruits,12));
+        System.out.println(autoDrive.valueDistFruit(fruits,1));
+        System.out.println(autoDrive.valueDistFruit(fruits,9));
+        System.out.println(autoDrive.valueDistFruit(fruits,3));
     }
 
 
