@@ -19,6 +19,7 @@ public class Fruit  {
 	private edge_data edge;             //The edge the fruit is on
 	private int type;                   //The type of the fruit [-1,Banana][1,Apple]
 	private ImageIcon img;              //The icon of the fruit
+	private boolean tag;
 
 	/**
 	 * constructor of Fruit
@@ -35,6 +36,7 @@ public class Fruit  {
 			img = new ImageIcon("src/Utils/icon/vagina(1).png"); //Banana
 		else
 			img = new ImageIcon("src/Utils/icon/vagina(2).png"); //Apple
+		tag = false;
 
 	}
 
@@ -55,6 +57,7 @@ public class Fruit  {
 				img = new ImageIcon("src/Utils/icon/banana-32.png"); //Banana
 			else
 				img = new ImageIcon("src/Utils/icon/icons8-apple-32.png"); //Apple
+			tag = false;
 		}
 		catch (JSONException e) {
 			e.printStackTrace();
@@ -103,6 +106,21 @@ public class Fruit  {
 	}
 
 	/**
+	 *
+	 * @param b true/false
+	 */
+	public void setTag(boolean b){
+		this.tag = b;
+	}
+
+	/**
+	 *
+	 * @return the tag of fruit
+	 */
+	public boolean getTag(){
+		return this.tag;
+	}
+	/**
 	 * @return edge fruit is on
 	 */
 	public edge_data getEdge() {
@@ -130,6 +148,17 @@ public class Fruit  {
 
 		return (int) (anotherFruit.getValue() - this.getValue());
 
+	}
+
+	@Override
+	public boolean equals(Object object){
+		if (object instanceof Fruit){
+			Fruit f = (Fruit)object;
+			return f.value == this.value &&
+					f.location.close2equals(this.location) &&
+					f.type == this.type;
+		}
+		return false;
 	}
 
 }

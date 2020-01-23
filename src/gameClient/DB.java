@@ -229,7 +229,6 @@ public class DB {
 	}
 }
 
-
 class _user_ {
 	int score;
 	int id;

@@ -64,7 +64,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		//init the game graph
 		playGround.graph = playGround.getGraph();
 		db = new DB();
-		_stats_ stats_level = db.userStatsLevel(203156963, level);
+
 		//set the window parameters
 		this.setSize(width, height);
 		this.setTitle("My Game");
@@ -77,14 +77,14 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		setRangeY();
 
 		//get the list of fruits and add them to the game
-		playGround.getFruits();
+		playGround.pullFruits();
 		//addRobots
 		if (manuel)
 			playGround.addRobots();
 		else
 			playGround.addRobotsAuto();
 
-		playGround.getRobots();
+		playGround.pullRobots();
 		playGround.startGame();
 
 		Thread gamePlay = new Thread(this);
@@ -115,8 +115,8 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 			long dt = 100;
 			try{
-				playGround.getRobots();
-				playGround.getFruits();
+				playGround.updateRobots();
+				playGround.updateRobots();
 				playGround.moveRobots();
 				repaint();
 				Thread.sleep(dt);
