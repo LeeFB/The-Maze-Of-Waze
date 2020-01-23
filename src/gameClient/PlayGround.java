@@ -20,6 +20,7 @@ import java.util.Random;
  */
 public class PlayGround{
 	private game_service game;  //game server
+	private int id;
 	private int level;          //level of game
 	protected DGraph graph;     //graph of game
 	protected LinkedList<Robot> robots= new LinkedList<>(); //list of robots in game
@@ -28,9 +29,9 @@ public class PlayGround{
 	//the driving control classes
 	private ManualDrive manualDrive;
 	private AutoDrive autoDrive;
+	private DB dataBase;
 	//kml
 	private KML_Logger kml;
-	private DB db;
 
 	Point3D lastPressed = new Point3D(0,0);
 
@@ -39,12 +40,13 @@ public class PlayGround{
 	}
 
 	public PlayGround(int level, boolean bool,int id){
+
 		this.level = level;
-		//TODO change id
-		Game_Server.login(203156963);
+		this.id = id;
+		Game_Server.login(id);
 		game = Game_Server.getServer(level);
-		db = new DB();
-		_stats_ stats_level = db.userStatsLevel(203156963, level);
+		//init the DB
+		dataBase = new DB();
 		graph = new DGraph();
 		graph.init(game.getGraph());
 		kml = new KML_Logger(level);
@@ -246,5 +248,8 @@ public class PlayGround{
 
 	protected void login(int id){
 
+	}
+	public String getStats(){
+		return dataBase.getInfo(id);
 	}
 }

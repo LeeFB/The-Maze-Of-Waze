@@ -23,7 +23,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 
 	private PlayGround playGround;
-	private DB db;
 	/**
 	 * this is the screen parameters
 	 */
@@ -63,8 +62,6 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 
 		//init the game graph
 		playGround.graph = playGround.getGraph();
-		db = new DB();
-		_stats_ stats_level = db.userStatsLevel(203156963, level);
 		//set the window parameters
 		this.setSize(width, height);
 		this.setTitle("My Game");
@@ -222,7 +219,7 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 				"0","1","2","3","4","5","6",
 				"7","8","9","10","11","12",
 				"13","14","15","16","17","18",
-				"19","20","21","22","23"};
+				"19","20","21","22","23","-31"};
 		String s;
 		do {
 			s = (String)JOptionPane.showInputDialog(
@@ -280,9 +277,10 @@ public class MyGameGUI extends JFrame implements ActionListener, MouseListener, 
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+
 		JOptionPane.showMessageDialog(
 				frame,
-				"Your Score is " + playGround.getGrade() + "\n",
+				playGround.getStats() + "\n",
 				"Game Over",
 				JOptionPane.INFORMATION_MESSAGE
 				);
