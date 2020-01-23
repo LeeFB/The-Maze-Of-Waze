@@ -44,7 +44,7 @@ The robot will move by using an algorithm.
 - Represents the game algorithm which is used on the Automated game.
 
 ### ManualDrive class
--Represents all the methods be used in the manual game
+- Represents all the methods be used in the manual game
 
 ### PlayGround class
 - Represents a game scenario that is given.
@@ -57,4 +57,4 @@ The robot will move by using an algorithm.
 - Creates a KML file for each game.
 
 ### DB class
-- uses the Data-base
+- Uses the Data-base
