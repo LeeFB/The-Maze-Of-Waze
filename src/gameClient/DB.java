@@ -155,7 +155,7 @@ public class DB {
 	 * @param id
 	 * @return the string info of the player statistics
 	 */
-	public String userStats(int id) {
+	private String userStats(int id) {
 		String allCustomersQuery = "SELECT levelID FROM Logs;";
 		HashMap<Integer, Integer> levels = new HashMap<Integer, Integer>();
 		int total_play = 0;
@@ -212,7 +212,7 @@ public class DB {
 	 * @param id - the id of the player
 	 * @param level - the stage from the game where I want to calculate the statistics
 	 */
-	public internal_stats userStatsLevel(int id, int level) {
+	private internal_stats userStatsLevel(int id, int level) {
 		// key: id, value: best score for id
 		HashMap<Integer, Integer> scores = new HashMap<Integer, Integer>();
 		String allCustomersQuery = "SELECT userID,levelID, score FROM Logs where levelID="+level;
