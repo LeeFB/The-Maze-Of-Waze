@@ -59,7 +59,7 @@ public class PlayGround {
         if (bool)
             manualDrive = new ManualDrive(graph);
         else
-            autoDrive = new AutoDrive(this);
+            autoDrive = new AutoDrive(graph);
     }
 
     /**

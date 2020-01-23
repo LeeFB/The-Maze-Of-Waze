@@ -29,6 +29,7 @@ public class AutoDrive
 		plan = new HashMap<>();
 		this.graph = graph;
 	}
+
 	public void updateMap(){
 
 	}
@@ -58,8 +59,6 @@ public class AutoDrive
 		if (!plan.containsKey(r_id)) {
 			setPath(r,fruits);
 		}
-
-
 
 		//in case of empty path
 		if (plan.get(r_id).isEmpty()) {
