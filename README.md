@@ -1,7 +1,5 @@
 # The Maze Of Waze
-- Ex3/Ex4 OOP
-
-<img src="https://github.com/m3et/Ex3/blob/master/screen%20shot/Screen%20Shot%202020-01-19%20at%2019.46.15.png">
+[![](https://imgur.com/PYbAdDu.png)](http://www.youtube.com/watch?v=cTmzMv8FwFY "Project")
 
 ### Introduction:
 
@@ -10,7 +8,7 @@ In This Project:
 which is based on assignment data and algorithmic data that underlies Assignment 2.
 - Create *KML* Files - which record the game and can be viewed on Google Earth.
 
-This project is based on building a real-time game of robots (objects) on a weighted graph and collecting fruits (objects) of numerical value ("coins") placed on the graph sides.\
+The project is based on building a real-time game of robots (objects) on a weighted graph and collecting fruits (objects) of numerical value ("coins") placed on the graph sides.\
 **Game time:** 30-60 seconds.\
 **Purpose of the game:** Obtain a maximum number of fruits that the robots collected together.
 
@@ -18,43 +16,40 @@ This project is based on building a real-time game of robots (objects) on a weig
 
 1. Choose level to play (0-23 options)
 <img src="https://github.com/m3et/Ex3/blob/master/screen%20shot/Screen%20Shot%202020-01-19%20at%2019.59.16.png">
-2. Choose mode to play
+2. Choose a mode to play
 <img src="https://github.com/m3et/Ex3/blob/master/screen%20shot/Screen%20Shot%202020-01-19%20at%2019.59.41.png">
 
-Two options:
-- **Manually** -
-The robot can be moved by pressing a button only on the neighbor nodes.
+#             Info
 
-- **Automatic** -
-The robot will move by using an algorithm.
+The-Maze-Of-Waze main goal is to collect as many fruits you can "eat", you can do it by two ways:
+- Manual mode
+- Auto mode
 
-### Fruit class
-- Represents the fruits to be collected.
 
-### Robot class
-- Represents the players - robots in the game.
+##      Manual Mode
 
-### Graph_Algo Class
-- Represents the graph algorithms.
+In Manual mode first of all you place your robots on the nodes that you want, 
+after that all you need to do is to decide which fruit you want to collect for each 
+robot and so on until the game is over.
 
-### DGraph class
-- Represents the data structure of the graph.
 
-### AutoDrive class
-- Represents the game algorithm which is used on the Automated game.
+##      Auto Mode
 
-### ManualDrive class
-- Represents all the methods be used in the manual game
+In Auto mode sit back on your chair and let us do our best effort using our fine algorithms
+in order to collect as much fruit in our given time we guarantee to the best result we can do!
 
-### PlayGround class
-- Represents a game scenario that is given.
-- Imported jar file -Game_Server.
 
-### MyGameGUI class
-- Represents a Graphical וnterface of the game.
+##      KML
 
-### KML_Logger class
-- Creates a KML file for each game.
+At the end of each level you have the chance to save your own result in a kml file ,
+and analyze it.<br><br>
+Here is an example for level 2:
 
-### DB class
-- Uses the Data-base
+<img src="images/map2.JPG" >
+
+## Game - Diagram
+<img src="images/Game_mannage.png" >
+
+## DataStructure - Diagram
+<img src="images/DataStructure.png" >
+
